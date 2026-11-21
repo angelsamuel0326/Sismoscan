@@ -1,0 +1,43 @@
+{
+ "imagenes": 52,
+ "con_grieta": 41,
+ "controles_sin_grieta": 10,
+ "deteccion": {
+  "detectadas": 40,
+  "de": 41,
+  "falsos_positivos": 2,
+  "controles": 10,
+  "orientacion_ok": 27,
+  "orientacion_de": 33
+ },
+ "trazo_sobre_no_grieta": {
+  "confirmadas": 1,
+  "de": 2
+ },
+ "semaforo": {
+  "exacto": 13,
+  "dentro_1": 16,
+  "de": 16,
+  "subestimaciones": 0,
+  "subestimaciones_graves": 0,
+  "sobreestimaciones": 3,
+  "matriz": {
+   "verde": {
+    "verde": 0,
+    "amarillo": 3,
+    "rojo": 0
+   },
+   "amarillo": {
+    "verde": 0,
+    "amarillo": 9,
+    "rojo": 0
+   },
+   "rojo": {
+    "verde": 0,
+    "amarillo": 0,
+    "rojo": 4
+   }
+  }
+ },
+ "nota": "Etiquetas de criterio visual preliminar; sin validar por un ingeniero. Controles negativos: 2 fotos reales + 6 sintéticas."
+}

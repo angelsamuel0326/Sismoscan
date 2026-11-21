@@ -1,0 +1,23 @@
+{% extends 'base.html' %}
+{% from '_macros.html' import icon %}
+{% block titulo %}Términos de uso{% endblock %}
+{% block contenido %}
+<div class="mt mt-info">
+  <header class="mt-hero">
+    <p class="mt-badge"><span class="mt-dot"></span>CONDICIONES DE USO • ORIENTACIÓN PRELIMINAR</p>
+    <h1>Términos de uso</h1>
+  </header>
+  <div class="mt-grid">
+  <section class="mt-card mt-card--ambar"><i class="mt-luz"></i><h2>Naturaleza del servicio</h2>
+    <p class="mt-txt">SismoScan es un prototipo académico que ofrece una <b>orientación preliminar</b> sobre grietas a partir de fotos y medidas. <b>No es un dictamen técnico</b> y no reemplaza la inspección de un ingeniero civil o estructural.</p>
+</section>
+  <section class="mt-card "><i class="mt-luz"></i><h2>Limitación</h2>
+    <p class="mt-txt">El servicio se ofrece «tal cual», sin garantía de exactitud. Los autores no responden por decisiones tomadas únicamente con base en el resultado.</p>
+</section>
+  </div>
+  <section class="mt-card mt-mt "><i class="mt-luz"></i><h2>Tu responsabilidad</h2>
+    <ul class="mt-lista mt-lista--ambar "><li>Las medidas dependen de la foto y de la referencia que indiques; verifica que sean razonables.</li><li>Si ves peligro inmediato, evacúa y llama al 123, sin esperar el resultado.</li><li>Sube solo fotos que te pertenezcan o que puedas usar, sin personas identificables.</li><li>No uses el servicio para decisiones de seguridad sin respaldo profesional.</li></ul>
+</section>
+  <p class="mt-pie">Más información en la <a class="mt-enlace" href="{{ url_for('main.privacidad') }}">política de privacidad</a> y la <a class="mt-enlace" href="{{ url_for('main.metodologia') }}">metodología</a>.</p>
+</div>
+{% endblock %}

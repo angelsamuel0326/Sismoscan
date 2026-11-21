@@ -1,0 +1,29 @@
+{% extends 'base.html' %}
+{% from '_macros.html' import icon %}
+{% block titulo %}Acerca del proyecto{% endblock %}
+{% block contenido %}
+<div class="mt mt-info">
+  <header class="mt-hero">
+    <p class="mt-badge"><span class="mt-dot"></span>PROYECTO ACADÉMICO • ODS 9 • INGENIERÍA DE SISTEMAS</p>
+    <h1>Acerca de SismoScan</h1>
+    <p class="mt-sub">Proyecto de Introducción a la Ingeniería · Ingeniería de Sistemas · Universidad Santiago de Cali.</p>
+  </header>
+  <div class="mt-grid">
+  <section class="mt-card "><i class="mt-luz"></i><h2>El problema</h2>
+    <p class="mt-txt">Tras un sismo, muchas familias no saben si una grieta en su vivienda es superficial o señal de daño estructural, y los ingenieros no alcanzan a atender a todos de inmediato.</p>
+</section>
+  <section class="mt-card "><i class="mt-luz"></i><h2>La solución</h2>
+    <p class="mt-txt">Con una foto, una referencia de tamaño y el trazo de la grieta, SismoScan estima su longitud, ancho aproximado y orientación, y entrega un semáforo (verde, amarillo, rojo) con recomendaciones y un asistente que responde dudas. Es una primera orientación para decidir qué hacer y cuándo pedir ayuda profesional.</p>
+</section>
+  <section class="mt-card "><i class="mt-luz"></i><h2>ODS 9</h2>
+    <p class="mt-txt">Aporta a «Industria, innovación e infraestructura»: usa tecnología accesible para hacer las edificaciones más seguras y resilientes.</p>
+</section>
+  <section class="mt-card  mt-card--ambar"><i class="mt-luz"></i><h2>Límites</h2>
+    <p class="mt-txt">Los pesos y umbrales son valores de prototipo que debe validar un ingeniero civil. Consulta la <a class="mt-enlace" href="{{ url_for('main.metodologia') }}">metodología</a>.</p>
+</section>
+  </div>
+  <section class="mt-card mt-mt "><i class="mt-luz"></i><h2>Equipo</h2>
+    <ul class="mt-equipo">{% for n in equipo %}<li>{{ n }}</li>{% endfor %}</ul>
+</section>
+</div>
+{% endblock %}

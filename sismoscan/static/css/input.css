@@ -1,0 +1,89 @@
+@import "tailwindcss";
+@custom-variant dark (&:where(.dark, .dark *));
+
+@theme {
+  --font-sans: "Inter", ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  --color-brand-50: #f0fdfa; --color-brand-100: #ccfbf1; --color-brand-200: #99f6e4; --color-brand-300: #5eead4;
+  --color-brand-400: #2dd4bf; --color-brand-500: #14b8a6; --color-brand-600: #0d9488; --color-brand-700: #0f766e;
+  --color-brand-800: #115e59; --color-brand-900: #134e4a; --color-brand-950: #042f2e;
+  --color-ink-50: #f8fafc; --color-ink-100: #f1f5f9; --color-ink-200: #e2e8f0; --color-ink-300: #cbd5e1;
+  --color-ink-400: #94a3b8; --color-ink-500: #64748b; --color-ink-600: #475569; --color-ink-700: #334155;
+  --color-ink-800: #1e293b; --color-ink-900: #0f172a; --color-ink-950: #09090b;
+  --shadow-soft: 0 1px 2px rgb(2 6 23 / .05), 0 10px 30px -10px rgb(2 6 23 / .14);
+  --shadow-glow: 0 0 0 1px rgb(45 212 191 / .25), 0 12px 40px -12px rgb(20 184 166 / .45);
+  --shadow-float: 0 2px 4px rgb(16 24 32 / .05), 0 24px 48px -16px rgb(16 24 32 / .22);
+  --animate-scan: scan 2.2s ease-in-out infinite;
+  --animate-rise: rise .5s cubic-bezier(.2,.7,.2,1) both;
+  --animate-pulse-ring: pulse-ring 1.8s ease-out infinite;
+  @keyframes scan { 0% { top: 0 } 50% { top: calc(100% - 3px) } 100% { top: 0 } }
+  @keyframes rise { from { opacity: 0; transform: translateY(12px) } to { opacity: 1; transform: none } }
+  @keyframes pulse-ring { 0% { box-shadow: 0 0 0 0 rgb(20 184 166 / .45) } 100% { box-shadow: 0 0 0 18px rgb(20 184 166 / 0) } }
+}
+
+@layer base {
+  html { color-scheme: light; background: #f8fafc; -webkit-tap-highlight-color: transparent; }
+  html.dark { color-scheme: dark; background: #09090b; }
+  body { @apply bg-ink-50 text-ink-800 font-sans antialiased dark:bg-ink-950 dark:text-ink-100; font-feature-settings: "cv11", "ss01"; }
+  html.dark body { background-image: radial-gradient(60rem 30rem at 85% -10%, rgb(20 184 166 / .10), transparent 60%), radial-gradient(40rem 24rem at -10% 10%, rgb(30 41 59 / .55), transparent 60%); background-attachment: fixed; }
+  .tabular { font-variant-numeric: tabular-nums; }
+  :focus-visible { @apply outline-2 outline-offset-2 outline-brand-500; }
+}
+
+@utility card { @apply rounded-2xl border border-ink-200/70 bg-white shadow-soft transition duration-300 dark:border-slate-800 dark:bg-slate-900/70 dark:shadow-[0_20px_50px_-20px_rgb(0_0_0_/_.7)] dark:backdrop-blur; }
+@utility btn { @apply inline-flex min-h-11 items-center justify-center gap-2 rounded-xl px-4 py-2.5 text-sm font-semibold transition duration-200 active:scale-[.98] disabled:pointer-events-none disabled:opacity-50; }
+@utility btn-primary { @apply btn bg-gradient-to-b from-brand-500 to-brand-600 text-white shadow-sm hover:-translate-y-px hover:shadow-glow dark:from-brand-400 dark:to-brand-500 dark:text-slate-950; }
+@utility btn-ghost { @apply btn border border-ink-200 bg-white text-ink-700 hover:bg-ink-50 dark:border-slate-700 dark:bg-slate-900 dark:text-ink-100 dark:hover:border-brand-500/50 dark:hover:bg-slate-800; }
+@utility btn-danger { @apply btn border border-red-200 bg-white text-red-700 hover:bg-red-50 dark:border-red-900 dark:bg-ink-900 dark:text-red-400 dark:hover:bg-red-950; }
+@utility field { @apply block w-full min-h-11 rounded-xl border border-ink-200 bg-white px-3.5 py-2.5 text-sm text-ink-900 placeholder:text-ink-400 transition focus:border-brand-500 focus:ring-4 focus:ring-brand-500/15 focus:outline-none dark:border-slate-700 dark:bg-slate-950/70 dark:text-ink-50 dark:focus:border-brand-400 dark:focus:ring-brand-400/20; }
+@utility label { @apply mb-1.5 block text-sm font-medium text-ink-700 dark:text-ink-200; }
+@utility hint { @apply text-xs text-ink-500 dark:text-ink-400; }
+@utility badge { @apply inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 text-xs font-semibold; }
+@utility badge-verde { @apply badge bg-emerald-50 text-emerald-700 ring-1 ring-inset ring-emerald-600/20 dark:bg-emerald-950 dark:text-emerald-300 dark:ring-emerald-400/20; }
+@utility badge-amarillo { @apply badge bg-amber-50 text-amber-800 ring-1 ring-inset ring-amber-600/25 dark:bg-amber-950 dark:text-amber-300 dark:ring-amber-400/20; }
+@utility badge-rojo { @apply badge bg-red-50 text-red-700 ring-1 ring-inset ring-red-600/20 dark:bg-red-950 dark:text-red-300 dark:ring-red-400/20; }
+@utility chip { @apply inline-flex min-h-11 cursor-pointer items-center gap-2 rounded-xl border border-ink-200 bg-white px-3.5 py-2 text-sm font-medium text-ink-700 transition select-none hover:border-brand-400 dark:border-slate-700 dark:bg-slate-900 dark:text-ink-200; }
+@utility bar { @apply h-2 overflow-hidden rounded-full bg-ink-100 dark:bg-ink-800; }
+
+@layer components {
+  .chip:has(input:focus-visible) { @apply outline-2 outline-offset-2 outline-brand-500; }
+  .bar > span { @apply block h-full w-0 rounded-full transition-[width] duration-1000 ease-out; }
+}
+
+@media print {
+  .no-print { display: none !important; }
+  body { background: #fff !important; color: #000 !important; }
+  .card { box-shadow: none !important; break-inside: avoid; }
+}
+@media (prefers-reduced-motion: reduce) { *, ::before, ::after { animation-duration: .01ms !important; transition-duration: .01ms !important; } }
+
+[hidden] { display: none !important; }
+
+/* Opción seleccionada: relleno sólido + ✓. VA FUERA de @layer a propósito: la utilidad .chip (capa utilities) pisaría una regla en components y
+   la selección no se vería. Dos reglas separadas: si el navegador no entiende :has(), la clase .is-checked (la pone ui.js) la cubre. */
+.chip.is-checked { @apply border-brand-700 bg-brand-700 font-semibold text-white ring-2 ring-brand-500/40 dark:border-brand-400 dark:bg-brand-500 dark:text-slate-950; }
+.chip:has(input:checked) { @apply border-brand-700 bg-brand-700 font-semibold text-white ring-2 ring-brand-500/40 dark:border-brand-400 dark:bg-brand-500 dark:text-slate-950; }
+.chip.is-checked::before { content: "\2713"; font-weight: 800; }
+.chip:has(input:checked)::before { content: "\2713"; font-weight: 800; }
+.seg { @apply cursor-pointer rounded-lg px-3 py-2.5 text-center text-sm font-semibold text-ink-600 transition hover:text-ink-900 dark:text-ink-300 dark:hover:text-white; }
+.seg.is-checked { @apply bg-brand-700 text-white shadow-sm dark:bg-brand-500 dark:text-slate-950; }
+.seg:has(input:checked) { @apply bg-brand-700 text-white shadow-sm dark:bg-brand-500 dark:text-slate-950; }
+
+/* Pantallas de acceso (registro, recuperar): mismos campos que el login, acento ámbar. */
+.auth-card .field { @apply rounded-xl border-slate-800 bg-slate-950/60 px-4 py-3.5 text-sm text-white placeholder-slate-500 hover:border-slate-700 focus:border-amber-500 focus:ring-2 focus:ring-amber-500/20 focus:outline-none; }
+.auth-card .label { @apply mb-1.5 text-xs font-medium text-slate-300; }
+.auth-card .hint { @apply text-slate-400; }
+.auth-card input[type="checkbox"] { @apply accent-amber-500; }
+.auth-card .btn-primary { @apply bg-amber-500 bg-none text-slate-950 shadow-lg shadow-amber-500/20 hover:bg-amber-400 active:scale-[0.98]; }
+.auth-card .btn-primary:hover { background-image: none; }
+.auth-card .field:-webkit-autofill { -webkit-box-shadow: 0 0 0 40px #0b1220 inset; -webkit-text-fill-color: #fff; caret-color: #fff; }
+
+/* Ilustración del login: la grieta se dibuja una sola vez al cargar. */
+.crack-draw { stroke-dasharray: 1; stroke-dashoffset: 0; }
+.crack-halo, .crack-link { opacity: 1; }
+@media (prefers-reduced-motion: no-preference) {
+  .crack-draw { stroke-dashoffset: 1; animation: crack-draw 1.4s cubic-bezier(.4,0,.2,1) .35s forwards; }
+  .crack-halo { opacity: 0; animation: crack-fade .6s ease-out 1.5s forwards; }
+  .crack-link { opacity: 0; animation: crack-fade .6s ease-out 1.6s forwards; }
+}
+@keyframes crack-draw { to { stroke-dashoffset: 0; } }
+@keyframes crack-fade { to { opacity: 1; } }

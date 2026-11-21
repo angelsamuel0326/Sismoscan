@@ -1,0 +1,122 @@
+{% extends 'base.html' %}
+{% from '_macros.html' import icon, SEM, escala %}
+{% block titulo %}Panel{% endblock %}
+{% block contenido %}
+<div class="pn-hola animate-rise">
+  <p class="k">Panel de control</p>
+  <h1>Hola, {{ usuario.nombre.split()[0] }}</h1>
+  <p>Evalúa una grieta nueva o revisa tus análisis anteriores.</p>
+</div>
+
+<div class="pn animate-rise">
+
+  {# ── HERO: módulo de escaneo rápido ── #}
+  <section class="pn-surf pn-hero" aria-labelledby="pn-h">
+    <svg class="pn-reticle" viewBox="0 0 48 48" aria-hidden="true"><path d="M1 15V1h14M33 1h14v14M47 33v14H33M15 47H1V33"/><path d="M24 17v14M17 24h14"/></svg>
+    <svg class="pn-wave" viewBox="0 0 600 88" preserveAspectRatio="none" aria-hidden="true"><path d="M0 44h120l14-6 12 26 14-52 16 62 12-40 10 10h60l12-4 10 14 12-30 12 28 10-12h294"/></svg>
+    <div class="relative">
+      <span class="pn-live mono"><i></i>Sistema de triaje activo • Norma NSR-10 / ACI 274R</span>
+      <h2 id="pn-h">¿Encontraste una grieta? <em>Mídela</em> y obtén una orientación en minutos.</h2>
+      <p class="lead">Responde unas preguntas, toma la foto, marca la longitud con un objeto de referencia y deja que SismoScan cruce los datos.</p>
+      <a href="{{ url_for('main.analizar') }}" class="pn-cta">{{ icon('camera', 'h-5 w-5') }} Comenzar análisis {{ icon('arrow-right', 'h-4 w-4') }}</a>
+    </div>
+    <ol class="pn-pipe relative" aria-label="Pasos del análisis">
+      {% for n, t, d in [('01', 'Contexto', 'Elemento, material y señales'), ('02', 'Captura', 'Cámara o galería'), ('03', 'Calibración X/Y', 'Longitud y eje de la grieta'), ('04', 'Dictamen', 'Semáforo y recomendación')] %}
+      <li><span class="pn-node mono">{{ n }}</span><span><b>{{ t }}</b><span class="d">{{ d }}</span></span></li>
+      {% endfor %}
+    </ol>
+  </section>
+
+  {% if analisis %}{% set u = analisis[0] %}{% set ur = u.resultado %}
+  <section class="pn-surf pn-last" aria-label="Último resultado">
+    <span class="{{ SEM[ur.semaforo].badge }}">{{ SEM[ur.semaforo].label }} · {{ ur.indice }}</span>
+    <p><b class="text-white">Último análisis:</b> {{ ELEMENTOS[u.entrada.elemento] }}, {{ ur.medidas.largo_mm|cm }} cm · {{ u.creado|fecha }}. {{ ur.decision|capitalize }}.</p>
+    <a class="l" href="{{ url_for('main.resultado', aid=u.id) }}">Ver resultado</a>
+    {% if analisis|length > 1 %}<a class="l" href="{{ url_for('main.comparar', a=analisis[1].id, b=u.id) }}">Comparar con el anterior</a>{% endif %}
+  </section>{% endif %}
+
+  <nav class="pn-nav" aria-label="Accesos rápidos">
+    <a class="pn-chip" href="{{ url_for('main.historial') }}">Historial</a><a class="pn-chip" href="{{ url_for('main.ayuda') }}">Cómo tomar la foto</a><a class="pn-chip" href="{{ url_for('main.cuenta') }}">Mi cuenta</a><a class="pn-chip" href="tel:123">Emergencias 123</a>
+  </nav>
+
+  {# ── TELEMETRÍA ── #}
+  {% set prom = ((stats.promedio or 0)|round|int) %}
+  <section class="pn-tele" aria-label="Resumen">
+    <div class="pn-surf pn-mod">
+      <h3 class="mono">Análisis realizados</h3>{{ icon('history', 'ic') }}
+      <p class="pn-val mono">{{ '%02d'|format(stats.total) }}<small>REG</small></p>
+      <p class="pn-empty mono">{{ 'Bitácora activa' if stats.total else 'Sin registros' }}</p>
+    </div>
+    <div class="pn-surf pn-mod">
+      <h3 class="mono">Severidad promedio</h3>{{ icon('scan', 'ic') }}
+      <p class="pn-val mono">{{ '%02d'|format(prom) }}<small>/ 100 PTS</small></p>
+      <svg class="pn-spec" viewBox="0 0 100 10" preserveAspectRatio="none" role="img" aria-label="Severidad promedio {{ prom }} de 100">
+        <rect class="g" x="0" y="3" width="33" height="4" rx="1"/><rect class="y" x="34" y="3" width="33" height="4" rx="1"/><rect class="r" x="68" y="3" width="32" height="4" rx="1"/>
+        <rect class="m" x="{{ [[prom, 1]|max, 99]|min - 1 }}" y="0" width="2" height="10" rx="1"/>
+      </svg>
+    </div>
+    <div class="pn-surf pn-mod">
+      <h3 class="mono">Casos en rojo</h3>{{ icon('alert', 'ic') }}
+      <p class="pn-val mono {% if stats.rojos %}red{% endif %}">{{ '%02d'|format(stats.rojos) }}<small>CRÍTICOS</small></p>
+      <p class="pn-empty mono">{{ 'Requieren atención' if stats.rojos else 'Sin casos críticos' }}</p>
+    </div>
+    <div class="pn-surf pn-mod">
+      <h3 class="mono">Tendencia reciente</h3>{{ icon('panel', 'ic') }}
+      {% if tendencia|length > 1 %}
+      {% set ns = namespace(pts='') %}
+      {% for v in tendencia %}{% set ns.pts = ns.pts ~ ((loop.index0 * 120 / (tendencia|length - 1))|round(1)) ~ ',' ~ ((36 - v * 0.34)|round(1)) ~ ' ' %}{% endfor %}
+      {% set ult = ns.pts.split()[-1].split(',') %}
+      <svg class="pn-spark" viewBox="0 0 120 40" preserveAspectRatio="none" role="img" aria-label="Evolución de los últimos índices de severidad">
+        <line class="base" x1="0" y1="36" x2="120" y2="36"/>
+        <polygon class="ar" points="0,40 {{ ns.pts }}120,40"/>
+        <polyline class="ln" points="{{ ns.pts }}"/>
+        <circle class="pt" cx="{{ ult[0] }}" cy="{{ ult[1] }}" r="2.6"/>
+      </svg>
+      {% else %}
+      <svg class="pn-spark" viewBox="0 0 120 40" preserveAspectRatio="none" aria-hidden="true"><line class="base" x1="0" y1="24" x2="120" y2="24"/></svg>
+      <p class="pn-empty mono">Disponible con 2 análisis</p>
+      {% endif %}
+    </div>
+  </section>
+
+  <div class="pn-body">
+    <section class="pn-surf pn-panel">
+      <div class="pn-ph"><h2>Análisis recientes</h2><a href="{{ url_for('main.historial') }}">Ver todos</a></div>
+      {% if analisis %}
+      <ul class="pn-list">
+        {% for a in analisis %}{% set r = a.resultado %}
+        <li><a href="{{ url_for('main.resultado', aid=a.id) }}" class="pn-row">
+          {% if a.tiene_miniatura %}<img src="{{ url_for('main.imagen', aid=a.id, tipo='miniatura') }}" alt="" loading="lazy" class="pn-thumb">
+          {% else %}<span class="pn-thumb">{{ icon('building', 'h-6 w-6') }}</span>{% endif %}
+          <span class="t"><b>{{ ELEMENTOS[a.entrada.elemento] }} · {{ r.medidas.largo_mm|cm }} cm</b><span>{{ a.creado|fecha }} · {{ r.decision|capitalize }}</span></span>
+          <span class="{{ SEM[r.semaforo].badge }}">{{ SEM[r.semaforo].label }} · {{ r.indice }}</span>
+        </a></li>
+        {% endfor %}
+      </ul>
+      {% else %}
+      <div class="pn-vacio">
+        <b>Aún no hay análisis</b>
+        <p>Haz tu primera evaluación para verla aquí.</p>
+        <a href="{{ url_for('main.analizar') }}" class="pn-cta">Nuevo análisis</a>
+      </div>{% endif %}
+    </section>
+
+    <aside class="pn-side">
+      <section class="pn-surf pn-panel">
+        <div class="pn-ph"><h2>Checklist de calibración</h2></div>
+        <p class="pn-eyebrow mono">Para una buena medición</p>
+        <ol class="pn-check">
+          <li><span class="n mono">[01]</span><span>Fotografía de <b>frente</b> a la pared, sin ángulo.</span></li>
+          <li><span class="n mono">[02]</span><span>Pega al lado una <b>tarjeta</b> (8,56 cm) o regla, a la misma distancia.</span></li>
+          <li><span class="n mono">[03]</span><span>Buena luz y foto enfocada; evita sombras sobre la grieta.</span></li>
+          <li><span class="n mono">[04]</span><span>Si hay riesgo inmediato, <b>evacúa primero</b> y analiza después.</span></li>
+        </ol>
+      </section>
+      <section class="pn-surf pn-aviso">
+        <p class="h">{{ icon('info', 'h-4 w-4') }} Orientación preliminar</p>
+        <p>SismoScan no reemplaza la evaluación de un ingeniero estructural. Ante cualquier duda, llama al 123.</p>
+      </section>
+    </aside>
+  </div>
+</div>
+{% endblock %}

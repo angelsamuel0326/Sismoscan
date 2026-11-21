@@ -1,0 +1,32 @@
+# Blueprint de Render: servicio web (HTTPS automático) + base de datos PostgreSQL.
+databases:
+  - name: sismoscan-db
+    databaseName: sismoscan
+    plan: free            # verifica en Render las condiciones vigentes del plan gratuito (puede caducar); para uso real elige un plan de pago
+
+services:
+  - type: web
+    name: sismoscan
+    runtime: python
+    plan: free
+    buildCommand: pip install -r requirements.txt
+    startCommand: gunicorn wsgi:app --workers 2 --threads 4 --timeout 90
+    healthCheckPath: /healthz
+    envVars:
+      - { key: PYTHON_VERSION, value: "3.12.7" }
+      - { key: APP_ENV, value: production }          # exige SECRET_KEY, activa cookies seguras y HSTS
+      - { key: COOKIE_SECURE, value: "1" }
+      - { key: TRUST_PROXY, value: "1" }
+      - { key: SECRET_KEY, generateValue: true }
+      - key: DATABASE_URL
+        fromDatabase: { name: sismoscan-db, property: connectionString }
+      - { key: VISION_PROVIDER, value: auto }
+      - { key: OPENAI_API_KEY, sync: false }         # opcional: visión + chat con IA
+      - { key: GOOGLE_VISION_API_KEY, sync: false }  # opcional
+      - { key: PUBLIC_BASE_URL, sync: false }        # opcional: https://sismoscan.onrender.com
+      - { key: MOSTRAR_ENLACES_DEMO, value: "0" }    # los enlaces de recuperación NO se muestran en pantalla
+      - { key: SMTP_HOST, sync: false }               # sin SMTP no se pueden enviar correos de recuperación
+      - { key: SMTP_USER, sync: false }
+      - { key: SMTP_PASSWORD, sync: false }
+      - { key: SMTP_FROM, sync: false }
+      - { key: SENTRY_DSN, sync: false }

@@ -1,0 +1,33 @@
+{% extends 'base.html' %}
+{% from '_macros.html' import icon, SEM, medidor, escala %}
+{% set r = a.resultado %}{% set s = SEM[r.semaforo] %}{% set m = r.medidas %}
+{% block titulo %}Resumen compartido{% endblock %}
+{% block contenido %}
+<div class="mx-auto max-w-3xl">
+  <p class="text-sm font-medium text-brand-700 dark:text-brand-300">Resumen compartido · {{ a.creado|fecha }}</p>
+  <h1 class="mt-1 text-3xl font-extrabold tracking-tight text-ink-900 dark:text-white">{{ R.ELEMENTOS[a.entrada.elemento] }} · {{ m.largo_mm|cm }} cm</h1>
+  <p class="mt-2 text-sm text-ink-500 dark:text-ink-400">Alguien compartió contigo este análisis preliminar de SismoScan. No incluye fotos ni datos personales.</p>
+  <p class="no-print mt-3"><a class="btn-ghost" href="{{ url_for('main.compartido_pdf', token=a.share_token) }}">{{ icon('download', 'h-4 w-4') }} Informe técnico en PDF</a></p>
+
+  <section class="card {{ s.border }} mt-6 overflow-hidden"><div class="grid md:grid-cols-[auto_1fr]">
+    <div class="{{ s.soft }} flex flex-col items-center justify-center gap-4 p-6">{{ medidor(r.indice, r.semaforo, 'w-52') }}<div class="w-48">{{ escala(r.indice) }}</div></div>
+    <div class="p-6"><span class="{{ s.badge }}">{{ s.label }} · {{ s.sub }}</span>
+      <p class="mt-4 text-sm font-semibold uppercase tracking-wide {{ s.text }}">{{ r.decision }}</p>
+      <h2 class="mt-1 text-2xl font-extrabold leading-snug text-ink-900 dark:text-white">{{ r.titulo }}</h2>
+      {% if r.criticas %}<ul class="mt-4 list-disc space-y-1 pl-5 text-sm text-red-800 dark:text-red-200">{% for c in r.criticas %}<li>{{ c }}</li>{% endfor %}</ul>{% endif %}</div></div></section>
+
+  <section class="card mt-6 p-6"><h2 class="text-lg font-bold text-ink-900 dark:text-white">Medidas</h2>
+    <dl class="mt-3 grid grid-cols-2 gap-3 text-sm sm:grid-cols-4">
+      <div class="rounded-xl bg-ink-50 p-3 dark:bg-ink-800/60"><dt class="text-xs text-ink-500">Longitud</dt><dd class="font-bold tabular">{{ m.largo_mm|cm }} cm</dd></div>
+      <div class="rounded-xl bg-ink-50 p-3 dark:bg-ink-800/60"><dt class="text-xs text-ink-500">Eje X</dt><dd class="font-bold tabular">{{ m.ext_x_mm|cm }} cm</dd></div>
+      <div class="rounded-xl bg-ink-50 p-3 dark:bg-ink-800/60"><dt class="text-xs text-ink-500">Eje Y</dt><dd class="font-bold tabular">{{ m.ext_y_mm|cm }} cm</dd></div>
+      <div class="rounded-xl bg-ink-50 p-3 dark:bg-ink-800/60"><dt class="text-xs text-ink-500">Orientación</dt><dd class="font-bold">{{ m.orientacion|capitalize }}</dd></div></dl></section>
+
+  <section class="card mt-6 p-6"><h2 class="text-lg font-bold text-ink-900 dark:text-white">Qué hacer</h2>
+    <ol class="mt-3 list-decimal space-y-2 pl-5 text-sm text-ink-700 dark:text-ink-200">{% for t in r.acciones %}<li>{{ t }}</li>{% endfor %}</ol></section>
+  <section class="card mt-6 border-amber-200 bg-amber-50 p-6 dark:border-amber-900 dark:bg-amber-950/40"><h2 class="flex items-center gap-2 font-bold text-amber-900 dark:text-amber-200">{{ icon('info', 'h-5 w-5') }} Importante</h2>
+    <ul class="mt-2 space-y-1 text-sm text-amber-900/90 dark:text-amber-100/85">{% for t in r.advertencias %}<li>{{ t }}</li>{% endfor %}</ul></section>
+  <div class="mt-8 flex flex-wrap items-center gap-3"><a href="{{ url_for('auth.registro') }}" class="btn-primary">Crear mi cuenta en SismoScan</a>
+    <a href="{{ url_for('main.metodologia') }}" class="btn-ghost">Cómo se calcula</a></div>
+</div>
+{% endblock %}

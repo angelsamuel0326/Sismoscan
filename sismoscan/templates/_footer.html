@@ -1,0 +1,33 @@
+{% from '_macros.html' import icon, logo, marca %}
+<footer class="no-print border-t border-ink-200/70 bg-white/60 pb-24 pt-10 dark:border-slate-800 dark:bg-zinc-950/60 md:pb-10">
+  <div class="mx-auto grid max-w-6xl gap-8 px-4 sm:grid-cols-2 lg:grid-cols-4">
+    <div class="sm:col-span-2 lg:col-span-1">
+      <div class="flex items-center gap-2.5 font-bold tracking-tight text-ink-900 dark:text-white">{{ logo('h-8 w-8') }}<span class="text-base">{{ marca() }}</span></div>
+      <p class="mt-3 text-sm text-ink-600 dark:text-ink-400">Proyecto de <b>Introducción a la Ingeniería</b>, Ingeniería de Sistemas, Universidad Santiago de Cali. Aporta al <b>ODS 9</b>: industria, innovación e infraestructura.</p>
+    </div>
+    <nav aria-label="Información" class="text-sm">
+      <p class="font-semibold text-ink-900 dark:text-white">Información</p>
+      <ul class="mt-3 space-y-2 text-ink-600 dark:text-ink-400">
+        <li><a class="hover:text-brand-600 hover:underline dark:hover:text-brand-300" href="{{ url_for('main.acerca') }}">Acerca del proyecto</a></li>
+        <li><a class="hover:text-brand-600 hover:underline dark:hover:text-brand-300" href="{{ url_for('main.ayuda') }}">Ayuda: cómo tomar la foto</a></li>
+        <li><a class="hover:text-brand-600 hover:underline dark:hover:text-brand-300" href="{{ url_for('main.metodologia') }}">Metodología</a></li>
+        <li><a class="hover:text-brand-600 hover:underline dark:hover:text-brand-300" href="{{ url_for('main.privacidad') }}">Política de privacidad</a></li>
+        <li><a class="hover:text-brand-600 hover:underline dark:hover:text-brand-300" href="{{ url_for('main.terminos') }}">Términos de uso</a></li>
+      </ul>
+    </nav>
+    <div class="text-sm">
+      <p class="font-semibold text-ink-900 dark:text-white">Equipo</p>
+      <ul class="mt-3 space-y-1.5 text-ink-600 dark:text-ink-400">{% for n in equipo %}<li>{{ n }}</li>{% endfor %}</ul>
+    </div>
+    <div class="text-sm">
+      <p class="font-semibold text-ink-900 dark:text-white">¿Emergencia?</p>
+      <a href="tel:123" data-llamar="123" data-llamar-nombre="Emergencias" class="mt-3 inline-flex items-center gap-2 rounded-xl border border-red-300 bg-red-50 px-4 py-2.5 font-bold text-red-700 transition hover:bg-red-100 dark:border-red-900 dark:bg-red-950/50 dark:text-red-200">{{ icon('phone', 'h-4 w-4') }} Llamar al 123</a>
+      <p class="mt-3 text-xs text-ink-500 dark:text-ink-400">Bomberos 119 · Cruz Roja 132 · Defensa Civil 144</p>
+      {% if contacto %}<p class="mt-2 text-xs text-ink-500 dark:text-ink-400">Contacto: <a class="underline" href="mailto:{{ contacto }}">{{ contacto }}</a></p>{% endif %}
+    </div>
+  </div>
+  <div class="mx-auto mt-8 max-w-6xl border-t border-ink-200/70 px-4 pt-5 text-xs text-ink-500 dark:border-slate-800 dark:text-ink-400">
+    <p><b>Resultado preliminar:</b> SismoScan orienta, pero no reemplaza la inspección de un ingeniero civil o estructural. Ante peligro inmediato, evacúa y llama al 123.</p>
+    <p class="mt-1">© 2026 Proyecto SismoScan · Con fines académicos.</p>
+  </div>
+</footer>

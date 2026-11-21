@@ -1,0 +1,38 @@
+{% extends 'base.html' %}
+{% from '_macros.html' import icon %}
+{% block titulo %}Ayuda{% endblock %}
+{% block contenido %}
+<div class="mt mt-info">
+  <header class="mt-hero">
+    <p class="mt-badge"><span class="mt-dot"></span>GUÍA DE USO • FOTO, REFERENCIA Y TRAZO</p>
+    <h1>Ayuda: cómo obtener un buen análisis</h1>
+  </header>
+  <div class="mt-grid">
+  <section class="mt-card "><i class="mt-luz"></i><h2>Cómo tomar la foto</h2>
+    <ol class="mt-lista mt-lista--ambar "><li>Ponte de frente a la pared, con el celular paralelo a ella (sin ángulo).</li><li>Usa buena luz; evita sombras y reflejos sobre la grieta.</li><li>Que se vea la grieta completa y, si puedes, el elemento (columna, muro, viga).</li><li>Pega al lado de la grieta una <b>referencia de tamaño</b> conocida.</li></ol>
+</section>
+  <div class="mt-pila">
+  <section class="mt-card "><i class="mt-luz"></i><h2>Referencia de tamaño</h2>
+    <p class="mt-txt">Una regla, una cinta métrica o una hoja carta (27,9 cm de alto) pegada en la pared. Marca sus dos extremos en la foto e indica cuánto mide en la realidad.</p>
+</section>
+  <section class="mt-card "><i class="mt-luz"></i><h2>Trazar la grieta</h2>
+    <p class="mt-txt">Toca el inicio y el final de la grieta; «Seguir la grieta» ajusta el trazo a su borde. Si es ramificada, agrega más líneas. Usa Deshacer o Limpiar si te equivocas.</p>
+</section>
+  </div>
+  </div>
+  <section class="mt-card "><i class="mt-luz"></i><h2>Qué significa el semáforo</h2>
+    <ul class="mt-sem">
+      <li class="mt-sem-verde"><i class="mt-luz-s"></i><p class="mt-sem-t">Verde</p>Riesgo bajo; vigílala y vuelve a medir.</li>
+      <li class="mt-sem-amarillo"><i class="mt-luz-s"></i><p class="mt-sem-t">Amarillo</p>Riesgo moderado; programa una revisión profesional.</li>
+      <li class="mt-sem-rojo"><i class="mt-luz-s"></i><p class="mt-sem-t">Rojo</p>Riesgo alto; evita la zona y consulta de inmediato.</li>
+    </ul>
+</section>
+  <section class="mt-card "><i class="mt-luz"></i><h2>Preguntas frecuentes</h2>
+    <div class="mt-faq">
+      <details><summary>¿Reemplaza a un ingeniero?</summary><p>No. Es una orientación preliminar.</p></details>
+      <details><summary>¿Qué hago si olvidé mi contraseña?</summary><p>Usa «¿Olvidaste tu contraseña?» en la pantalla de ingreso.</p></details>
+      <details><summary>¿Puedo borrar mis datos?</summary><p>Sí, desde Mi cuenta puedes descargarlos o eliminar tu cuenta.</p></details>
+    </div>
+</section>
+</div>
+{% endblock %}

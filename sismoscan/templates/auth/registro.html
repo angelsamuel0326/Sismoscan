@@ -1,0 +1,29 @@
+{% extends 'auth/layout.html' %}
+{% from '_macros.html' import icon %}
+{% block titulo %}Crear cuenta{% endblock %}
+{% block formulario %}
+<h2 class="text-2xl font-extrabold tracking-tight text-white lg:text-3xl">Crea tu cuenta</h2>
+<p class="mt-1.5 text-sm text-slate-400">Guarda tu historial de evaluaciones y accede desde cualquier dispositivo.</p>
+<form method="post" class="sx-form-compact" novalidate>
+  <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+  <div><label class="label" for="nombre">Nombre</label>
+    <input class="field" id="nombre" name="nombre" autocomplete="name" required maxlength="80" value="{{ f.nombre }}" autofocus></div>
+  <div><label class="label" for="correo">Correo electrónico</label>
+    <input class="field" id="correo" name="correo" type="email" autocomplete="email" inputmode="email" required value="{{ f.correo }}" placeholder="tu@correo.com"></div>
+  <div class="grid">
+    <div><label class="label" for="clave">Contraseña</label>
+      <div class="relative"><input class="field pr-12" id="clave" name="clave" type="password" autocomplete="new-password" minlength="8" required aria-describedby="ayuda-clave">
+        <button type="button" data-toggle-pass="clave" class="absolute right-1 top-1 grid h-9 w-10 place-items-center rounded-lg text-slate-400 transition hover:text-amber-400" aria-label="Mostrar u ocultar la contraseña">{{ icon('eye') }}</button></div></div>
+    <div><label class="label" for="clave2">Repite la contraseña</label>
+      <input class="field" id="clave2" name="clave2" type="password" autocomplete="new-password" minlength="8" required></div>
+  </div>
+  <div class="sx-fuerza"><div class="h-1.5 overflow-hidden rounded-full bg-slate-800" aria-hidden="true"><div id="fuerza-barra" class="h-full w-0 rounded-full bg-red-500 transition-all"></div></div>
+    <p id="ayuda-clave" class="hint mt-1">Mínimo 8 caracteres. Fuerza: <b id="fuerza-texto">—</b>. Mezcla letras, números y símbolos; evita contraseñas comunes.</p></div>
+  <label class="flex items-start gap-3 rounded-xl border border-ink-200 p-3 text-sm text-ink-600 dark:border-ink-800 dark:text-ink-300">
+    <input type="checkbox" name="acepto" value="1" required class="mt-0.5 h-5 w-5 rounded border-slate-600 accent-amber-500">
+    <span>Entiendo que SismoScan da una <b>orientación preliminar</b> y no reemplaza la inspección de un ingeniero estructural. Acepto los <a class="font-semibold text-amber-400 underline" href="{{ url_for('main.terminos') }}" target="_blank" rel="noopener">términos de uso</a> y la <a class="font-semibold text-amber-400 underline" href="{{ url_for('main.privacidad') }}" target="_blank" rel="noopener">política de privacidad</a> (tratamiento de datos, Ley 1581 de 2012).</span></label>
+  <button class="btn-primary group w-full">Crear cuenta {{ icon('arrow-right', 'h-4 w-4') }}</button>
+</form>
+<p class="mt-5 text-center text-sm text-slate-400">¿Ya tienes cuenta? <a class="font-semibold text-amber-400 hover:text-amber-300 hover:underline" href="{{ url_for('auth.ingresar') }}">Iniciar sesión</a></p>
+{% endblock %}
+{% block scripts %}<script src="{{ url_for('static', filename='js/auth.js') }}" defer></script>{% endblock %}

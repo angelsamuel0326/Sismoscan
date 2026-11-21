@@ -1,0 +1,74 @@
+{% extends 'base.html' %}
+{% from '_macros.html' import icon, SEM %}
+{% block titulo %}Metodología{% endblock %}
+{% block contenido %}
+<div class="mt">
+  <header class="mt-hero">
+    <p class="mt-badge"><span class="mt-dot"></span>MARCO TÉCNICO Y NORMATIVO • NSR-10 / ACI 274R</p>
+    <h1>Cómo llega SismoScan a un resultado</h1>
+    <p class="mt-sub">Es una orientación preliminar basada en reglas transparentes. Aquí está cada paso, para que puedas revisarlo y discutirlo con un ingeniero.</p>
+    <nav class="mt-indice" aria-label="Secciones">
+      <a href="#m-dato"><b>01</b> Del dato al resultado</a><a href="#m-factores"><b>02</b> Factores y puntos</a><a href="#m-semaforo"><b>03</b> El semáforo</a><a href="#m-priv"><b>04</b> Privacidad</a><a href="#m-ref"><b>05</b> Referencias</a>
+    </nav>
+  </header>
+
+  <section class="mt-card" id="m-dato"><i class="mt-luz"></i><h2>1. Del dato al resultado</h2>
+    <ol class="mt-pasos">
+      <li><span class="mt-num">01</span><span><b>Contexto.</b> Elemento, material, ancho aproximado, señales de peligro, sismo reciente, uso y antigüedad.</span></li>
+      <li><span class="mt-num">02</span><span><b>Medición.</b> Marcas un objeto de referencia (p. ej. una tarjeta de 8,56 cm) y recorres la grieta. Con la escala se calculan longitud, extensión en los ejes X e Y y el ángulo.</span></li>
+      <li><span class="mt-num">03</span><span><b>Visión por computador.</b> Si mediste sobre la foto, una detección local (OpenCV) busca la grieta junto a tu trazo y contrasta tu medición; si ingresas las medidas a mano, no se usa la detección automática porque en fotos libres confunde sombras y bordes con grietas. Si el administrador configuró una IA externa (OpenAI o Google Cloud Vision), aporta una lectura visual: patrón, desprendimientos, acero expuesto y calidad de la foto.</span></li>
+      <li><span class="mt-num">04</span><span><b>Reglas.</b> Se suman los puntos ponderados y se evalúan los disparadores críticos. El resultado es un índice de severidad de 0 a 100 y un semáforo.</span></li></ol></section>
+
+  <section class="mt-card" id="m-factores"><i class="mt-luz"></i><h2>2. Factores y puntos</h2>
+    <div class="mt-tabla"><table><thead><tr><th>Factor</th><th>Puntos</th><th>Criterio</th></tr></thead>
+      <tbody>
+        <tr><td>Ancho</td><td>0–30</td><td>&lt; 0,3 mm: 0 · 0,3–1: 8 · 1–3: 18 · &gt; 3 mm: 30</td></tr>
+        <tr><td>Orientación</td><td>0–25</td><td>Eje X o Y (±15°): 0 · diagonal: 15 · cruzada en X: 25</td></tr>
+        <tr><td>Longitud</td><td>0–10</td><td>&lt; 30 cm: 0 · 30–100 cm: 5 · ≥ 100 cm: 10</td></tr>
+        <tr><td>Elemento</td><td>0–12</td><td>Muro 0 · losa 4 · viga 7 · columna 8 · columna con grieta horizontal: 12</td></tr>
+        <tr><td>Contexto</td><td>0–10</td><td>Sismo reciente: 4 · crujidos: 3 · puertas atascadas: 3</td></tr>
+        <tr><td>Uso y antigüedad</td><td>0–8</td><td>Grupo de uso III o IV: 4 · construida antes de 1984: 4</td></tr>
+        <tr><td>Lectura por IA</td><td>0–5</td><td>Desprendimiento observado</td></tr>
+        <tr class="mt-total"><td>Total</td><td>100</td><td>Índice de severidad 0–100</td></tr></tbody></table></div>
+    <p class="mt-nota">El <b>índice</b> es la suma de los factores (máximo 100) y es la <b>única</b> fuente del color: verde 0–29, amarillo 30–59, rojo 60–100. Así, número y color nunca se contradicen.</p>
+    <div class="mt-alerta mt-alerta--rojo"><p class="mt-alerta-t">Triaje de Seguridad Conservador por Alerta de Cortante</p>
+      <p>Si hay un <b>disparador crítico</b> (grieta diagonal o en X en columna/viga o muy abierta, apertura &gt; 3 mm, acero expuesto, inclinación, desprendimiento en columna o viga) el índice se eleva al mínimo de la banda roja (60). La falla por cortante es frágil: ocurre sin aviso, y por eso, ante una evaluación remota, se prefiere una falsa alarma a un daño no detectado. Se muestra el puntaje acumulado, el ajuste y el motivo.</p></div>
+    </section>
+
+  <section class="mt-card" id="m-semaforo"><i class="mt-luz"></i><h2>3. El semáforo</h2>
+    <p class="mt-nota">Sigue la señalización de la metodología unificada de evaluación de edificaciones tras el terremoto, adoptada por la UNGRD mediante la Circular 73 de 2026.</p>
+    <ul class="mt-sem">
+      {% for k, t, d in [('verde', 'Verde · 0–29', 'Permite el ingreso y uso sin restricciones, aunque no significa que no haya daño.'), ('amarillo', 'Amarillo · 30–59', 'Impone restricciones de ingreso, ocupación o uso y requiere evaluación detallada.'), ('rojo', 'Rojo · 60–100 o disparador crítico', 'Riesgo de colapso: no entrar ni ocupar salvo autorización de la autoridad competente.')] %}
+      <li class="mt-sem-{{ k }}"><span class="mt-luz-s"></span><p class="mt-sem-t">{{ t }}</p><p>{{ d }}</p></li>{% endfor %}</ul></section>
+
+  <section class="mt-card mt-card--ambar"><i class="mt-luz"></i><h2 class="mt-h-ic">{{ icon('alert', 'h-5 w-5') }} Límites que debes conocer</h2>
+    <ul class="mt-lista">
+      <li>Es una orientación preliminar. <b>No reemplaza</b> la inspección de un ingeniero civil o estructural.</li>
+      <li>Los pesos y umbrales son criterios de referencia del prototipo y deben ser validados por un profesional frente a la NSR-10 y las guías oficiales.</li>
+      <li>La precisión de la medida depende de fotografiar de frente y de que la referencia esté a la misma distancia que la grieta. El ancho se declara por categorías; no se mide en la foto.</li>
+      <li>Una grieta fina puede ocultar daño estructural importante, y una ancha puede ser solo de acabados. Ante duda, evacúa y consulta.</li></ul></section>
+
+  {% if banco %}{% set sm, de = banco.semaforo, banco.deteccion %}
+  <section class="mt-card" aria-labelledby="h-banco"><i class="mt-luz"></i><h2 id="h-banco">Pruebas con un banco de imágenes</h2>
+    <p class="mt-nota">{{ banco.imagenes }} fotos ({{ banco.con_grieta }} con grieta y {{ banco.controles_sin_grieta }} controles sin grieta). Resultados reproducibles con <code>tools/evaluar_banco.py</code>.</p>
+    <dl class="mt-kpis">
+      <div class="mt-kpi"><dt>Semáforo: coincidencia exacta</dt><dd>{{ sm.exacto }}/{{ sm.de }} <span>({{ (100 * sm.exacto / sm.de)|round|int }} %)</span></dd></div>
+      <div class="mt-kpi"><dt>Casos graves subestimados</dt><dd>{{ sm.subestimaciones }}</dd></div>
+      <div class="mt-kpi"><dt>Falsos positivos de detección libre</dt><dd>{{ de.falsos_positivos }}/{{ de.controles }}</dd></div>
+    </dl>
+    <ul class="mt-lista mt-lista--tenue">
+      <li>Orientación acertada por la detección automática sin trazo del usuario: {{ de.orientacion_ok }}/{{ de.orientacion_de }}. Por eso la app solo usa la detección cuando el usuario marca la grieta.</li>
+      <li>Trazo sobre algo que no es grieta (cable, marco): la detección lo «confirma» en {{ banco.trazo_sobre_no_grieta.confirmadas }}/{{ banco.trazo_sobre_no_grieta.de }} casos. No distingue una grieta de otra línea oscura.</li>
+      <li>Ante la duda, el semáforo sube de nivel: un caso peligroso en verde es el peor error posible.</li></ul>
+    <p class="mt-alerta mt-alerta--ambar mt-alerta--s">{{ banco.nota }} Las reglas se ajustaron mirando este mismo banco, así que el porcentaje mide consistencia, no exactitud: falta validarlo con fotos nuevas y un ingeniero.</p></section>
+  {% endif %}
+
+  <div class="mt-duo">
+  <section class="mt-card" id="m-priv"><i class="mt-luz"></i><h2>4. Privacidad</h2>
+    <p class="mt-txt">La imagen se reduce y se re-codifica, eliminando metadatos como ubicación y dispositivo. No se guarda el original; solo una miniatura opcional que puedes borrar junto con el análisis. Si hay una IA externa configurada, la imagen reducida se envía a ese proveedor únicamente para su lectura visual, con tu autorización.</p></section>
+
+  <section class="mt-card" id="m-ref"><i class="mt-luz"></i><h2>5. Referencias</h2>
+    <ul class="mt-refs">{% for t, d in R.REFERENCIAS %}<li><b>{{ t }}.</b> {{ d }}</li>{% endfor %}</ul></section>
+  </div>
+</div>
+{% endblock %}

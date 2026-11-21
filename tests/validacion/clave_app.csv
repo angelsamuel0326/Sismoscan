@@ -1,0 +1,51 @@
+n,escenario,app_semaforo,app_indice
+1,"Muro de mampostería. Grieta fina, como un cabello (< 0,3 mm). Largo 8 cm. Orientación vertical. Sin sismo reciente. Sin otras señales.",verde,0
+2,"Muro de concreto reforzado. Grieta fina, como un cabello (< 0,3 mm). Largo 15 cm. Orientación horizontal. Sin sismo reciente. Sin otras señales.",verde,0
+3,"Losa o techo de concreto reforzado. Grieta fina, como un cabello (< 0,3 mm). Largo 10 cm. Orientación horizontal. Sin sismo reciente. Sin otras señales.",verde,4
+4,Columna de concreto reforzado. Grieta muy ancha (> 3 mm). Largo 80 cm. Orientación vertical. Hubo un sismo reciente. Se ve la varilla.,rojo,60
+5,Viga de concreto reforzado. Grieta muy ancha (> 3 mm). Largo 60 cm. Orientación diagonal. Hubo un sismo reciente. Se desprende concreto o revoque.,rojo,60
+6,"Muro de mampostería. Grieta ancha (1 a 3 mm). Largo 1,5 m. Orientación diagonal. Hubo un sismo reciente. Elemento visiblemente inclinado.",rojo,60
+7,"Muro de mampostería. Grieta media (0,3 a 1 mm). Largo 20 cm. Orientación vertical. Sin sismo reciente. Sin otras señales.",verde,8
+8,Muro de mampostería. Grieta ancha (1 a 3 mm). Largo 20 cm. Orientación vertical. Sin sismo reciente. Sin otras señales.,amarillo,30
+9,Muro de concreto reforzado. Grieta muy ancha (> 3 mm). Largo 20 cm. Orientación vertical. Sin sismo reciente. Sin otras señales.,rojo,60
+10,"Losa o techo de concreto reforzado. Grieta media (0,3 a 1 mm). Largo 30 cm. Orientación horizontal. Sin sismo reciente. Sin otras señales.",verde,15
+11,Losa o techo de concreto reforzado. Grieta ancha (1 a 3 mm). Largo 30 cm. Orientación horizontal. Sin sismo reciente. Sin otras señales.,amarillo,30
+12,"Viga de concreto reforzado. Grieta fina, como un cabello (< 0,3 mm). Largo 30 cm. Orientación horizontal. Sin sismo reciente. Sin otras señales.",verde,10
+13,"Viga de concreto reforzado. Grieta media (0,3 a 1 mm). Largo 30 cm. Orientación horizontal. Sin sismo reciente. Sin otras señales.",amarillo,30
+14,Viga de concreto reforzado. Grieta ancha (1 a 3 mm). Largo 30 cm. Orientación vertical. Sin sismo reciente. Sin otras señales.,amarillo,30
+15,"Muro de mampostería. Grieta fina, como un cabello (< 0,3 mm). Largo 25 cm. Orientación vertical. Sin sismo reciente. Sin otras señales.",verde,0
+16,"Muro de mampostería. Grieta fina, como un cabello (< 0,3 mm). Largo 35 cm. Orientación vertical. Sin sismo reciente. Sin otras señales.",amarillo,30
+17,"Muro de mampostería. Grieta fina, como un cabello (< 0,3 mm). Largo 60 cm. Orientación vertical. Sin sismo reciente. Sin otras señales.",amarillo,45
+18,"Muro de mampostería. Grieta fina, como un cabello (< 0,3 mm). Largo 1,2 m. Orientación vertical. Sin sismo reciente. Sin otras señales.",amarillo,45
+19,"Muro de mampostería. Grieta fina, como un cabello (< 0,3 mm). Largo 2,0 m. Orientación horizontal. Sin sismo reciente. Sin otras señales.",amarillo,50
+20,"Muro de mampostería. Grieta media (0,3 a 1 mm). Largo 60 cm. Orientación horizontal. Sin sismo reciente. Sin otras señales.",amarillo,45
+21,"Muro de mampostería. Grieta media (0,3 a 1 mm). Largo 1,2 m. Orientación vertical. Sin sismo reciente. Sin otras señales.",amarillo,45
+22,"Muro de mampostería. Grieta media (0,3 a 1 mm). Largo 2,5 m. Orientación horizontal. Sin sismo reciente. Sin otras señales.",rojo,60
+23,"Muro de mampostería. Grieta fina, como un cabello (< 0,3 mm). Largo 30 cm. Orientación diagonal. Sin sismo reciente. Sin otras señales.",verde,18
+24,"Muro de mampostería. Grieta media (0,3 a 1 mm). Largo 30 cm. Orientación diagonal. Sin sismo reciente. Sin otras señales.",amarillo,30
+25,Muro de mampostería. Grieta ancha (1 a 3 mm). Largo 30 cm. Orientación diagonal. Sin sismo reciente. Sin otras señales.,amarillo,36
+26,"Muro de mampostería. Grieta fina, como un cabello (< 0,3 mm). Largo 40 cm. Orientación diagonal. Hubo un sismo reciente. Sin otras señales.",amarillo,30
+27,"Muro de mampostería. Grieta media (0,3 a 1 mm). Largo 40 cm. Orientación diagonal. Hubo un sismo reciente. Sin otras señales.",amarillo,30
+28,"Muro de mampostería. Grieta fina, como un cabello (< 0,3 mm). Largo 40 cm. Orientación vertical. Sin sismo reciente. Otra grieta la cruza formando una X. Sin otras señales.",amarillo,30
+29,"Muro de mampostería. Grieta media (0,3 a 1 mm). Largo 40 cm. Orientación vertical. Sin sismo reciente. Otra grieta la cruza formando una X. Sin otras señales.",amarillo,36
+30,"Columna de concreto reforzado. Grieta fina, como un cabello (< 0,3 mm). Largo 30 cm. Orientación diagonal. Sin sismo reciente. Sin otras señales.",amarillo,30
+31,"Columna de concreto reforzado. Grieta media (0,3 a 1 mm). Largo 30 cm. Orientación diagonal. Sin sismo reciente. Sin otras señales.",rojo,60
+32,"Viga de concreto reforzado. Grieta fina, como un cabello (< 0,3 mm). Largo 30 cm. Orientación diagonal. Sin sismo reciente. Sin otras señales.",amarillo,30
+33,"Viga de concreto reforzado. Grieta media (0,3 a 1 mm). Largo 40 cm. Orientación diagonal. Sin sismo reciente. Otra grieta la cruza formando una X. Sin otras señales.",rojo,60
+34,"Columna de concreto reforzado. Grieta fina, como un cabello (< 0,3 mm). Largo 25 cm. Orientación vertical. Sin sismo reciente. Sin otras señales.",verde,8
+35,"Columna de concreto reforzado. Grieta media (0,3 a 1 mm). Largo 25 cm. Orientación vertical. Sin sismo reciente. Sin otras señales.",amarillo,30
+36,Columna de concreto reforzado. Grieta ancha (1 a 3 mm). Largo 25 cm. Orientación vertical. Sin sismo reciente. Sin otras señales.,rojo,60
+37,"Losa o techo de concreto reforzado. Grieta fina, como un cabello (< 0,3 mm). Largo 60 cm. Orientación diagonal. Sin sismo reciente. Sin otras señales.",amarillo,45
+38,"Losa o techo de concreto reforzado. Grieta media (0,3 a 1 mm). Largo 60 cm. Orientación diagonal. Sin sismo reciente. Sin otras señales.",amarillo,45
+39,"Muro de mampostería. Grieta fina, como un cabello (< 0,3 mm). Largo 20 cm. Orientación vertical. Hubo un sismo reciente. Sin otras señales.",amarillo,30
+40,"Muro de mampostería. Grieta media (0,3 a 1 mm). Largo 20 cm. Orientación vertical. Hubo un sismo reciente. Sin otras señales.",amarillo,30
+41,"Muro de mampostería. Grieta fina, como un cabello (< 0,3 mm). Largo 20 cm. Orientación vertical. Sin sismo reciente. Se oyen crujidos.",amarillo,30
+42,"Muro de mampostería. Grieta fina, como un cabello (< 0,3 mm). Largo 20 cm. Orientación vertical. Sin sismo reciente. Puertas atascadas.",amarillo,30
+43,"Muro de mampostería. Grieta media (0,3 a 1 mm). Largo 20 cm. Orientación vertical. Sin sismo reciente. Se oyen crujidos; puertas atascadas.",amarillo,30
+44,"Muro de mampostería. Grieta fina, como un cabello (< 0,3 mm). Largo 20 cm. Orientación vertical. Sin sismo reciente. Se desprende concreto o revoque.",amarillo,30
+45,"Columna de concreto reforzado. Grieta fina, como un cabello (< 0,3 mm). Largo 20 cm. Orientación vertical. Sin sismo reciente. Se desprende concreto o revoque.",rojo,60
+46,"Columna de concreto reforzado. Grieta fina, como un cabello (< 0,3 mm). Largo 20 cm. Orientación vertical. Sin sismo reciente. Se ve la varilla.",rojo,60
+47,"Muro de mampostería. Grieta fina, como un cabello (< 0,3 mm). Largo 20 cm. Orientación vertical. Sin sismo reciente. Elemento visiblemente inclinado.",rojo,60
+48,"Losa o techo de concreto reforzado. Grieta media (0,3 a 1 mm). Largo 40 cm. Orientación horizontal. Hubo un sismo reciente. Se oyen crujidos.",amarillo,30
+49,Viga de concreto reforzado. Grieta ancha (1 a 3 mm). Largo 50 cm. Orientación diagonal. Hubo un sismo reciente. Sin otras señales.,rojo,60
+50,Muro de mampostería. Grieta ancha (1 a 3 mm). Largo 60 cm. Orientación horizontal. Sin sismo reciente. Sin otras señales.,amarillo,45

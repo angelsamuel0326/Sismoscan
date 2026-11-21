@@ -1,0 +1,135 @@
+{% from '_macros.html' import marca, modal_llamar, modal_instalar, icon, logo %}
+<!doctype html>
+<html lang="es" class="h-full">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>{% block titulo %}SismoScan{% endblock %} · SismoScan</title>
+  <meta name="description" content="SismoScan: evaluación preliminar de grietas en edificaciones con visión por computador y criterios de la NSR-10.">
+  <meta name="theme-color" content="#0f172a">
+  <meta name="csrf-token" content="{{ csrf_token() }}">
+  {% if usuario %}<meta name="user-id" content="{{ usuario.id }}">{% endif %}
+  <link rel="manifest" href="{{ url_for('main.manifest') }}">
+  <link rel="icon" type="image/svg+xml" href="{{ url_for('static', filename='img/isotipo.svg') }}">
+  <link rel="icon" type="image/png" href="{{ url_for('static', filename='icons/icon-192.png') }}">
+  <link rel="apple-touch-icon" href="{{ url_for('static', filename='icons/apple-touch-icon.png') }}">
+  <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap">
+  <script src="{{ url_for('static', filename='js/theme-init.js') }}"></script>
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/app.css', v=css_v) }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/panel.css', v=css_v) }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/analizar.css', v=css_v) }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/resultado.css', v=css_v) }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/historial.css', v=css_v) }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/metodologia.css', v=css_v) }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/marca.css', v=css_v) }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/chatbot.css', v=css_v) }}">
+</head>
+<body class="min-h-full">
+{% set nav = [('main.panel', 'Panel', 'panel'), ('main.analizar', 'Analizar', 'scan'), ('main.historial', 'Historial', 'history'), ('main.metodologia', 'Metodología', 'book')] %}
+<a href="#contenido" class="sr-only focus:not-sr-only focus:fixed focus:left-3 focus:top-3 focus:z-50 focus:rounded-lg focus:bg-white focus:px-3 focus:py-2 focus:text-ink-900">Saltar al contenido</a>
+
+<header class="no-print sticky top-0 z-30 border-b border-ink-200/70 bg-white/80 backdrop-blur-xl dark:border-ink-800 dark:bg-ink-950/80">
+  <div class="mx-auto flex h-16 max-w-6xl items-center gap-4 px-4">
+    <a href="{{ url_for('main.inicio') }}" class="flex items-center gap-2.5 font-bold tracking-tight text-ink-900 dark:text-white">
+      {{ logo() }}<span class="text-lg">{{ marca() }}</span>
+    </a>
+    {% if usuario %}
+    <nav class="ml-6 hidden items-center gap-1 md:flex" aria-label="Principal">
+      {% for ep, texto, ic in nav %}
+      <a href="{{ url_for(ep) }}" {% if request.endpoint == ep %}aria-current="page"{% endif %}
+         class="flex items-center gap-2 rounded-lg px-3 py-2 text-sm font-medium text-ink-600 transition hover:bg-ink-100 hover:text-ink-900 aria-[current=page]:bg-brand-50 aria-[current=page]:text-brand-800 dark:text-ink-300 dark:hover:bg-ink-800 dark:hover:text-white dark:aria-[current=page]:bg-brand-950 dark:aria-[current=page]:text-brand-100">
+        {{ icon(ic, 'h-4 w-4') }}{{ texto }}</a>
+      {% endfor %}
+    </nav>
+    {% endif %}
+    <div class="ml-auto flex items-center gap-2">
+      <button type="button" data-install hidden class="btn-ghost !min-h-10 !px-3">{{ icon('download', 'h-4 w-4') }}<span class="hidden sm:inline">Instalar</span></button>
+      <button type="button" data-theme-toggle class="btn-ghost !min-h-10 !px-3" aria-label="Cambiar entre modo claro y oscuro">
+        <span class="hidden dark:inline">{{ icon('sun', 'h-4 w-4') }}</span><span class="dark:hidden">{{ icon('moon', 'h-4 w-4') }}</span>
+      </button>
+      {% if usuario %}
+      <div class="hidden items-center gap-3 border-l border-ink-200 pl-3 dark:border-ink-800 sm:flex">
+        <span class="grid h-9 w-9 place-items-center rounded-full bg-brand-100 text-sm font-bold text-brand-800 dark:bg-brand-900 dark:text-brand-100" aria-hidden="true">{{ usuario.nombre[:1]|upper }}</span>
+        <a href="{{ url_for('main.cuenta') }}" class="max-w-[10rem] truncate text-sm font-medium hover:text-brand-600 hover:underline dark:hover:text-brand-300" title="Mi cuenta">{{ usuario.nombre }}</a>
+      </div>
+      <form method="post" action="{{ url_for('auth.salir') }}"><input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+        <button class="btn-ghost !min-h-10 !px-3" aria-label="Cerrar sesión">{{ icon('logout', 'h-4 w-4') }}<span class="hidden lg:inline">Salir</span></button></form>
+      {% else %}
+      <a href="{{ url_for('auth.ingresar') }}" class="btn-primary !min-h-10 !px-4">Ingresar</a>
+      {% endif %}
+    </div>
+  </div>
+</header>
+
+{% with mensajes = get_flashed_messages(with_categories=true) %}{% if mensajes %}
+<div class="no-print pointer-events-none fixed inset-x-0 top-20 z-40 mx-auto flex max-w-md flex-col gap-2 px-4" aria-live="polite">
+  {% for cat, m in mensajes %}
+  <div data-toast class="pointer-events-auto flex animate-rise items-start gap-3 rounded-xl border px-4 py-3 text-sm shadow-float {% if cat == 'error' %}border-red-200 bg-red-50 text-red-800 dark:border-red-900 dark:bg-red-950 dark:text-red-200{% else %}border-emerald-200 bg-emerald-50 text-emerald-800 dark:border-emerald-900 dark:bg-emerald-950 dark:text-emerald-200{% endif %}">
+    <span class="mt-0.5">{{ icon('alert' if cat == 'error' else 'check', 'h-4 w-4') }}</span><span class="flex-1">{{ m }}</span>
+  </div>{% endfor %}
+</div>{% endif %}{% endwith %}
+
+{% if usuario and not usuario.verificado %}
+<div class="pn-pill no-print" data-pill-verif role="status">
+  <span class="dot"></span>
+  <span>Verifica tu correo <b>{{ usuario.correo }}</b>
+  <form method="post" action="{{ url_for('auth.reenviar_verificacion') }}"><input type="hidden" name="csrf_token" value="{{ csrf_token() }}"><button class="lnk">Reenviar enlace</button></form></span>
+  <button type="button" class="x" data-pill-cerrar aria-label="Cerrar aviso">&times;</button>
+</div>{% endif %}
+{% if usuario %}<div id="pendientes" hidden class="no-print border-b border-brand-300/60 bg-brand-50 px-4 py-2 text-center text-sm text-brand-900 dark:border-brand-900/50 dark:bg-brand-950/40 dark:text-brand-100" role="status">
+  <span data-pend-texto></span> <button type="button" data-pend-enviar class="font-semibold underline">Enviar ahora</button> <button type="button" data-pend-descartar hidden class="font-semibold underline">Descartar los que fallaron</button>
+</div>{% endif %}
+<main id="contenido" class="mx-auto max-w-6xl px-4 pb-10 pt-6 md:pt-10">{% block contenido %}{% endblock %}</main>
+{% include '_footer.html' %}
+{{ modal_llamar() }}
+{{ modal_instalar() }}
+
+{% if usuario %}
+<nav class="no-print fixed inset-x-0 bottom-0 z-30 border-t border-ink-200/70 bg-white/90 pb-[env(safe-area-inset-bottom)] backdrop-blur-xl dark:border-ink-800 dark:bg-ink-950/90 md:hidden" aria-label="Navegación móvil">
+  <ul class="mx-auto grid max-w-md grid-cols-4">
+    {% for ep, texto, ic in nav %}
+    <li><a href="{{ url_for(ep) }}" {% if request.endpoint == ep %}aria-current="page"{% endif %}
+       class="flex min-h-16 flex-col items-center justify-center gap-1 text-[11px] font-semibold text-ink-500 transition aria-[current=page]:text-brand-700 dark:text-ink-400 dark:aria-[current=page]:text-brand-300">
+       {{ icon(ic, 'h-6 w-6') }}{{ texto }}</a></li>
+    {% endfor %}
+  </ul>
+</nav>
+{% endif %}
+{% if usuario %}
+<!-- Asistente de IA flotante -->
+<button type="button" id="cb-fab" class="cb-fab no-print" aria-expanded="false" aria-controls="cb-panel" aria-label="Abrir el asistente de IA">
+  <span class="cb-ic">{{ icon('chat', 'h-6 w-6') }}</span><span class="cb-x">{{ icon('x', 'h-6 w-6') }}</span></button>
+<section id="cb-panel" class="cb-panel no-print" hidden role="dialog" aria-label="Asistente de IA Sisma" data-url="{{ url_for('api.asistente_enviar') }}" data-uid="{{ usuario.id }}" data-aid="{{ cb_aid or '' }}" data-bienvenida="{{ ASISTENTE_BIENVENIDA }}" data-ia="{{ 1 if ASISTENTE_IA else 0 }}">
+  <header class="cb-head">
+    <span class="cb-av">{{ icon('cpu', 'h-5 w-5') }}</span>
+    <div class="cb-tit"><b>Sisma · Asistente de IA</b><small class="cb-est{{ '' if ASISTENTE_IA else ' cb-est-basico' }}">● {{ 'EN LÍNEA' if ASISTENTE_IA else 'MODO BÁSICO' }} • NSR-10</small></div>
+    <button type="button" id="cb-hist-btn" class="cb-ib" aria-pressed="false" aria-label="Historial de consultas" title="Historial">{{ icon('history', 'h-4 w-4') }}</button>
+    <button type="button" id="cb-cerrar" class="cb-ib" aria-label="Cerrar el asistente">{{ icon('x', 'h-4 w-4') }}</button>
+  </header>
+
+  <div id="cb-vista-chat" class="cb-vista">
+    <div id="cb-log" class="cb-log" aria-live="polite" aria-label="Conversación"></div>
+    <div id="cb-sug" class="cb-sug">{% for q in ASISTENTE_SUGERENCIAS %}<button type="button" data-sug>{{ q }}</button>{% endfor %}</div>
+    <form id="cb-form" class="cb-form" autocomplete="off"><label class="sr-only" for="cb-in">Tu consulta</label>
+      <input id="cb-in" maxlength="600" placeholder="Escribe tu consulta sobre la grieta o la norma..." enterkeyhint="send"><button type="submit" aria-label="Enviar">{{ icon('arrow-right', 'h-4 w-4') }}</button></form>
+    <p class="cb-pie">Orientación preliminar: no reemplaza a un ingeniero. Emergencias: 123.</p>
+  </div>
+
+  <div id="cb-vista-hist" class="cb-vista cb-hist" hidden>
+    <div class="cb-hist-top"><button type="button" id="cb-nuevo" class="cb-nuevo">{{ icon('plus', 'h-4 w-4') }} Nueva consulta</button></div>
+    <template id="cb-ico-borrar">{{ icon('trash', 'h-4 w-4') }}</template>
+    <ul id="cb-lista" class="cb-lista" aria-label="Conversaciones anteriores"></ul>
+    <p id="cb-vacio" class="cb-vacio" hidden>Aún no tienes consultas guardadas.</p>
+    <p class="cb-pie">El historial se guarda solo en este navegador.</p>
+  </div>
+</section>
+<script src="{{ url_for('static', filename='js/chatbot.js') }}" defer></script>
+{% endif %}
+<script src="{{ url_for('static', filename='js/ui.js') }}" defer></script>
+<script src="{{ url_for('static', filename='js/emergencia.js') }}" defer></script>
+<script src="{{ url_for('static', filename='js/panel.js') }}" defer></script>
+{% if usuario %}<script src="{{ url_for('static', filename='js/offline.js') }}" defer></script>{% endif %}
+{% block scripts %}{% endblock %}
+</body>
+</html>

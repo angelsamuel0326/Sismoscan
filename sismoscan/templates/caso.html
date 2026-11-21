@@ -1,0 +1,25 @@
+{% extends 'base.html' %}
+{% from '_macros.html' import icon, SEM, evolucion %}
+{% block titulo %}Caso{% endblock %}
+{% block contenido %}
+<a href="{{ url_for('main.historial') }}" class="inline-flex items-center gap-1 text-sm font-semibold text-brand-700 hover:underline dark:text-brand-300">{{ icon('arrow-left', 'h-4 w-4') }} Historial</a>
+<div class="mt-3 flex flex-wrap items-center gap-3"><h1 class="text-3xl font-extrabold tracking-tight text-ink-900 dark:text-white">{{ ubicacion or 'Caso' }}</h1>
+  <span class="{{ SEM[peor].badge }}">Peor grieta: {{ SEM[peor].label }}</span></div>
+<p class="mt-2 text-ink-600 dark:text-ink-300">{{ grietas|length }} grieta{{ 's' if grietas|length != 1 }} en este inmueble. El semáforo del caso es el de la grieta más grave: ante la duda, se toma el peor.</p>
+<div class="mt-6 space-y-6">
+{% for serie in grietas %}{% set u = serie[-1] %}{% set ur = u.resultado %}
+  <section class="card p-5 sm:p-6" aria-labelledby="g{{ loop.index }}">
+    <div class="flex flex-wrap items-center gap-4">
+      {% if u.tiene_miniatura %}<img src="{{ url_for('main.imagen', aid=u.id, tipo='miniatura') }}" alt="Foto de la grieta {{ loop.index }}" loading="lazy" class="h-20 w-20 rounded-xl object-cover ring-1 ring-ink-200 dark:ring-slate-800">{% endif %}
+      <div class="min-w-0 flex-1"><h2 id="g{{ loop.index }}" class="font-bold text-ink-900 dark:text-white">Grieta {{ loop.index }} · {{ ELEMENTOS[u.entrada.elemento] }}</h2>
+        <p class="text-sm text-ink-600 dark:text-ink-300">{{ serie|length }} medición{{ 'es' if serie|length != 1 }} · última: {{ ur.medidas.largo_mm|cm }} cm, {{ ur.medidas.orientacion }} · {{ u.creado|fecha }}</p></div>
+      <span class="{{ SEM[ur.semaforo].badge }}">{{ SEM[ur.semaforo].label }} · {{ ur.indice }}</span>
+      <a class="btn-ghost !min-h-10" href="{{ url_for('main.resultado', aid=u.id) }}">Ver</a>
+      <a class="btn-ghost !min-h-10" href="{{ url_for('main.analizar', remedir=u.id) }}">Medir de nuevo</a>
+    </div>
+    {% if graficas[loop.index0] %}<div class="mt-5">{{ evolucion(graficas[loop.index0]) }}</div>{% endif %}
+  </section>
+{% endfor %}
+</div>
+<a class="btn-primary mt-6" href="{{ url_for('main.analizar', otra=clave) }}">{{ icon('plus', 'h-4 w-4') }} Agregar otra grieta a este caso</a>
+{% endblock %}

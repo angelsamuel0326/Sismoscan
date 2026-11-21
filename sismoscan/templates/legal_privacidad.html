@@ -1,0 +1,30 @@
+{% extends 'base.html' %}
+{% from '_macros.html' import icon %}
+{% block titulo %}Política de privacidad{% endblock %}
+{% block contenido %}
+<div class="mt mt-info">
+  <header class="mt-hero">
+    <p class="mt-badge"><span class="mt-dot"></span>LEY 1581 DE 2012 • HABEAS DATA • DECRETO 1377 DE 2013</p>
+    <h1>Política de privacidad</h1>
+    <p class="mt-sub">Tratamiento de datos personales conforme a la Ley 1581 de 2012 (habeas data) y el Decreto 1377 de 2013, compilado en el Decreto 1074 de 2015. Proyecto académico.</p>
+  </header>
+  <div class="mt-grid">
+  <section class="mt-card "><i class="mt-luz"></i><h2>1. Qué datos recogemos</h2>
+    <ul class="mt-lista mt-lista--ambar "><li><b>Cuenta:</b> nombre, correo y contraseña (se guarda solo un hash, nunca la contraseña).</li><li><b>Análisis:</b> las fotos que subes, las líneas que trazas, las medidas, el resultado y la conversación del asistente.</li><li><b>Técnicos:</b> dirección IP para limitar abusos y una cookie de sesión.</li></ul>
+</section>
+  <section class="mt-card "><i class="mt-luz"></i><h2>2. Para qué los usamos</h2>
+    <p class="mt-txt">Solo para entregarte el análisis preliminar, guardar tu historial y proteger la cuenta. No vendemos ni compartimos tus datos con fines comerciales.</p>
+</section>
+  <section class="mt-card "><i class="mt-luz"></i><h2>3. Terceros</h2>
+    <p class="mt-txt">Si el administrador activa el asistente con inteligencia artificial externa, el texto de tu conversación puede enviarse a ese proveedor para generar la respuesta. Por defecto el asistente funciona con un motor local.</p>
+</section>
+  <section class="mt-card "><i class="mt-luz"></i><h2>4. Tus derechos</h2>
+    <p class="mt-txt">Puedes conocer, actualizar, rectificar y suprimir tus datos, y revocar la autorización. Desde <a class="mt-enlace" href="{{ url_for('main.cuenta') }}">Mi cuenta</a> puedes editar tu nombre, <b>descargar todos tus datos</b> y <b>eliminar tu cuenta</b> con todas tus fotos y análisis.</p>
+</section>
+  </div>
+  <section class="mt-card mt-mt "><i class="mt-luz"></i><h2>5. Cookies y seguridad</h2>
+    <p class="mt-txt">Usamos únicamente una cookie esencial de sesión (HttpOnly), sin publicidad ni rastreo. Las sesiones se pueden revocar y los intentos de acceso fallidos se limitan.</p>
+</section>
+  <p class="mt-pie">Texto elaborado para un proyecto universitario; antes de un uso real debe revisarlo un abogado.</p>
+</div>
+{% endblock %}

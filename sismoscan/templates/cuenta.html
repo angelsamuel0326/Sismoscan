@@ -1,0 +1,51 @@
+{% extends 'base.html' %}
+{% from '_macros.html' import icon %}
+{% block titulo %}Mi cuenta{% endblock %}
+{% block contenido %}
+<div class="mt mt-info mt-cuenta">
+  <header class="mt-perfil">
+    <i class="mt-luz"></i>
+    <span class="mt-avatar" aria-hidden="true">{{ (usuario.nombre or usuario.correo)[:1]|upper }}</span>
+    <div class="mt-perfil-info">
+      <h1>{{ usuario.nombre }}</h1>
+      <p class="mt-perfil-correo">{{ usuario.correo }}</p>
+      {% if usuario.verificado %}<span class="mt-estado"><span class="mt-dot"></span>CORREO VERIFICADO</span>{% else %}<span class="mt-estado mt-estado--pend"><span class="mt-dot"></span>CORREO SIN VERIFICAR</span>{% endif %}
+    </div>
+    <dl class="mt-perfil-kpi"><dt>Análisis guardados</dt><dd>{{ total }}</dd></dl>
+  </header>
+
+  <div class="mt-grid mt-grid--cuenta">
+    <div class="mt-pila">
+      <section class="mt-card"><i class="mt-luz"></i><h2>Nombre</h2>
+        <form method="post" action="{{ url_for('main.cuenta_nombre') }}" class="mt-form">
+          <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+          <div><label class="mt-lbl" for="nombre">Nombre</label><input class="mt-in" id="nombre" name="nombre" value="{{ usuario.nombre }}" maxlength="80" required></div>
+          <button class="mt-btn">Guardar nombre</button></form></section>
+
+      <section class="mt-card"><i class="mt-luz"></i><h2>Mis datos</h2>
+        <p class="mt-txt">Descarga un archivo JSON con tu cuenta, tus análisis y conversaciones (sin las imágenes).</p>
+        <a class="mt-btn mt-btn--link" href="{{ url_for('main.cuenta_exportar') }}">{{ icon('download','h-4 w-4') }} Descargar mis datos</a></section>
+    </div>
+
+    <section class="mt-card"><i class="mt-luz"></i><h2>Cambiar contraseña</h2>
+      <form method="post" action="{{ url_for('main.cuenta_clave') }}" class="mt-form">
+        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+        <div><label class="mt-lbl" for="actual">Contraseña actual</label><input class="mt-in" id="actual" name="actual" type="password" autocomplete="current-password" required></div>
+        <div><label class="mt-lbl" for="nueva">Contraseña nueva</label><input class="mt-in" id="nueva" name="nueva" type="password" autocomplete="new-password" minlength="8" required></div>
+        <div><label class="mt-lbl" for="nueva2">Repite la nueva</label><input class="mt-in" id="nueva2" name="nueva2" type="password" autocomplete="new-password" minlength="8" required></div>
+        <p class="mt-ayuda">Se cerrarán tus otras sesiones.</p><button class="mt-btn">Cambiar contraseña</button></form></section>
+  </div>
+
+  <section class="mt-card mt-peligro"><i class="mt-luz mt-luz--rojo"></i>
+    <div class="mt-peligro-grid">
+      <div><h2>Eliminar cuenta</h2>
+        <p class="mt-txt">Borra de forma permanente tu cuenta, todas tus fotos y análisis. No se puede deshacer.</p></div>
+      <form method="post" action="{{ url_for('main.cuenta_eliminar') }}" class="mt-form">
+        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+        <div><label class="mt-lbl" for="confirma">Escribe ELIMINAR</label><input class="mt-in" id="confirma" name="confirmacion" autocomplete="off" required></div>
+        <div><label class="mt-lbl" for="clave_el">Tu contraseña</label><input class="mt-in" id="clave_el" name="clave" type="password" autocomplete="current-password" required></div>
+        <button class="mt-btn mt-btn--rojo">Eliminar mi cuenta definitivamente</button></form>
+    </div>
+  </section>
+</div>
+{% endblock %}

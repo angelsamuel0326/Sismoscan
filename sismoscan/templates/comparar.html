@@ -1,0 +1,25 @@
+{% extends 'base.html' %}
+{% from '_macros.html' import icon, SEM %}
+{% block titulo %}Comparar análisis{% endblock %}
+{% block contenido %}
+<a href="{{ url_for('main.historial') }}" class="inline-flex items-center gap-1 text-sm font-semibold text-brand-700 hover:underline dark:text-brand-300">{{ icon('arrow-left', 'h-4 w-4') }} Historial</a>
+<h1 class="mt-3 text-3xl font-extrabold tracking-tight text-ink-900 dark:text-white">Comparar dos análisis</h1>
+<p class="mt-2 text-ink-600 dark:text-ink-300">Sirve para ver si una grieta crece con el tiempo. Compara solo fotos de la misma grieta.</p>
+<section class="mt-6 rounded-2xl border p-5 {{ 'border-red-300 bg-red-50 dark:border-red-900 dark:bg-red-950/40' if veredicto[0] == 'crece' else 'border-ink-200 bg-white dark:border-slate-800 dark:bg-zinc-900' }}" role="status">
+  <p class="font-bold text-ink-900 dark:text-white">{{ {'crece': 'Posible crecimiento', 'menor': 'Medida menor', 'estable': 'Sin cambio claro'}[veredicto[0]] }}</p>
+  <p class="mt-1 text-ink-700 dark:text-ink-300">{{ veredicto[1] }}</p></section>
+<div class="mt-6 overflow-x-auto rounded-2xl border border-ink-200 bg-white dark:border-slate-800 dark:bg-zinc-900">
+<table class="w-full text-left text-sm">
+  <caption class="sr-only">Comparación de medidas</caption>
+  <thead><tr class="border-b border-ink-200 dark:border-slate-800"><th scope="col" class="p-3"></th>
+    <th scope="col" class="p-3"><a class="underline" href="{{ url_for('main.resultado', aid=ant.id) }}">Anterior</a><br><span class="font-normal text-ink-500">{{ ant.creado|fecha }}</span></th>
+    <th scope="col" class="p-3"><a class="underline" href="{{ url_for('main.resultado', aid=nue.id) }}">Reciente</a><br><span class="font-normal text-ink-500">{{ nue.creado|fecha }}</span></th>
+    <th scope="col" class="p-3">Cambio</th></tr></thead>
+  <tbody class="divide-y divide-ink-100 dark:divide-slate-800">
+    <tr><th scope="row" class="p-3">Longitud</th><td class="p-3 tabular">{{ ant.resultado.medidas.largo_mm|cm }} cm</td><td class="p-3 tabular">{{ nue.resultado.medidas.largo_mm|cm }} cm</td><td class="p-3 font-semibold tabular">{{ '%+.1f'|format(d_largo) }} cm ({{ '%+d'|format(pct) }}%)</td></tr>
+    <tr><th scope="row" class="p-3">Ángulo</th><td class="p-3 tabular">{{ ant.resultado.medidas.angulo_deg|round|int }}°</td><td class="p-3 tabular">{{ nue.resultado.medidas.angulo_deg|round|int }}°</td><td class="p-3 font-semibold tabular">{{ '%+d'|format(d_ang) }}°</td></tr>
+    <tr><th scope="row" class="p-3">Índice</th><td class="p-3 tabular">{{ ant.resultado.indice }}</td><td class="p-3 tabular">{{ nue.resultado.indice }}</td><td class="p-3 font-semibold tabular">{{ '%+d'|format(d_ind) }}</td></tr>
+    <tr><th scope="row" class="p-3">Semáforo</th><td class="p-3"><span class="{{ SEM[ant.resultado.semaforo].badge }}">{{ SEM[ant.resultado.semaforo].label }}</span></td><td class="p-3"><span class="{{ SEM[nue.resultado.semaforo].badge }}">{{ SEM[nue.resultado.semaforo].label }}</span></td><td class="p-3"></td></tr>
+  </tbody></table></div>
+<div class="mt-6 grid grid-cols-2 gap-4">{% for x in (ant, nue) %}{% if x.tiene_miniatura %}<img src="{{ url_for('main.imagen', aid=x.id, tipo='miniatura') }}" alt="Foto del análisis del {{ x.creado|fecha }}" class="w-full rounded-2xl object-cover ring-1 ring-ink-200 dark:ring-slate-800">{% endif %}{% endfor %}</div>
+{% endblock %}

@@ -1,0 +1,43 @@
+/* Marca SismoScan: isotipo oscuro con borde ámbar y grieta ámbar brillante + nombre «Sismo»«Scan». */
+.sx-iso{display:inline-grid;place-items:center;flex:none;padding:.375rem;border-radius:.75rem;background:rgba(15,23,42,.9);border:1px solid rgba(245,158,11,.4);color:#fbbf24;box-shadow:0 4px 6px -1px rgba(0,0,0,.25),0 0 14px -4px rgba(245,158,11,.45)}
+.sx-iso svg{width:100%;height:100%;display:block}
+.sx-word{font-weight:700;letter-spacing:-.01em;color:#0f172a}
+.sx-word span{color:#d97706}
+html.dark .sx-word,.sx-word--claro{color:#fff}
+html.dark .sx-word span,.sx-word--claro span{color:#fbbf24}
+
+/* Modal de confirmación de emergencia (equivale a: fondo slate-950/90 + blur, tarjeta slate-900 borde red-500/50 rounded-3xl max-w-md, botón rojo y botón cancelar) */
+dialog.llm{margin:auto;padding:1rem;max-width:100%;width:100%;max-width:28rem;border:0;background:transparent;color:#cbd5e1;overflow:visible}
+dialog.llm::backdrop{background:rgba(2,6,23,.9);-webkit-backdrop-filter:blur(12px);backdrop-filter:blur(12px)}
+dialog.llm[open]{animation:llm-in .3s ease}
+dialog.llm[open]::backdrop{animation:llm-fondo .3s ease}
+@keyframes llm-in{from{opacity:0;transform:translateY(10px) scale(.97)}}
+@keyframes llm-fondo{from{opacity:0}}
+.llm-card{position:relative;overflow:hidden;padding:1.5rem;text-align:center;background:#0f172a;border:1px solid rgba(239,68,68,.5);border-radius:1.5rem;box-shadow:0 25px 50px -12px rgba(0,0,0,.7),0 0 40px -10px rgba(239,68,68,.35)}
+@media(min-width:1024px){.llm-card{padding:2rem}}
+.llm-luz{position:absolute;inset:0 0 auto 0;height:1px;background:linear-gradient(90deg,transparent,rgba(239,68,68,.7),transparent)}
+.llm-ic{display:inline-grid;place-items:center;width:3.5rem;height:3.5rem;margin-bottom:1rem;border-radius:1rem;background:rgba(239,68,68,.12);border:1px solid rgba(239,68,68,.35);color:#ef4444;animation:llm-pulso 2s cubic-bezier(.4,0,.6,1) infinite}
+.llm-ic svg{width:2rem;height:2rem}
+@keyframes llm-pulso{50%{opacity:.45}}
+.llm-t{margin:0 0 .75rem;font-size:1.4rem;font-weight:800;line-height:1.25;color:#fff;letter-spacing:-.01em}
+.llm-p{margin:0 0 1.5rem;font-size:.92rem;line-height:1.6;color:#94a3b8}
+.llm-ok{display:flex;align-items:center;justify-content:center;gap:.5rem;width:100%;margin-bottom:.75rem;padding:.8rem 1.5rem;border-radius:1rem;background:#dc2626;color:#fff;font-weight:700;font-size:1rem;text-decoration:none;box-shadow:0 10px 15px -3px rgba(220,38,38,.35);transition:background .2s}
+.llm-ok:hover{background:#ef4444}
+.llm-no{width:100%;padding:.65rem 1.5rem;border:0;border-radius:1rem;background:#1e293b;color:#cbd5e1;font-weight:500;font-size:.95rem;cursor:pointer;transition:background .2s}
+.llm-no:hover{background:#334155}
+.llm-ok:focus-visible,.llm-no:focus-visible{outline:3px solid #fecaca;outline-offset:3px}
+@media(prefers-reduced-motion:reduce){dialog.llm[open],dialog.llm[open]::backdrop,.llm-ic{animation:none}}
+
+/* Modal de instalación PWA (reutiliza dialog.llm; acento ámbar) */
+.ins .llm-card{border-color:rgba(245,158,11,.4);box-shadow:0 25px 50px -12px rgba(0,0,0,.7),0 0 40px -10px rgba(245,158,11,.3)}
+.ins .llm-luz{background:linear-gradient(90deg,transparent,rgba(245,158,11,.7),transparent)}
+.ins-ic{display:flex;align-items:center;justify-content:center;width:4rem;height:4rem;margin:0 auto 1rem;border-radius:1rem;background:rgba(245,158,11,.1);border:1px solid rgba(245,158,11,.3);box-shadow:0 0 24px -6px rgba(245,158,11,.5)}
+.ins-ok{display:flex;align-items:center;justify-content:center;gap:.5rem;width:100%;margin-bottom:.75rem;padding:.8rem 1.5rem;border:0;border-radius:1rem;background:#f59e0b;color:#020617;font-weight:700;font-size:1rem;cursor:pointer;box-shadow:0 10px 15px -3px rgba(245,158,11,.3);transition:background .2s}
+.ins-ok:hover{background:#fbbf24}
+.ins-ok:focus-visible{outline:3px solid #fde68a;outline-offset:3px}
+
+/* página sin conexión */
+.off .card{border-color:rgba(245,158,11,.25);box-shadow:0 25px 50px -12px rgba(0,0,0,.6),0 0 40px -14px rgba(245,158,11,.35)}
+.off-logo{display:block;margin:0 auto 1.25rem;height:2.5rem;width:auto}
+.off-btn{background:#f59e0b;color:#0b0d14;box-shadow:0 8px 24px -10px rgba(245,158,11,.6)}
+.off-btn:hover{background:#fbbf24}

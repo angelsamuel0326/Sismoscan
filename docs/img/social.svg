@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1280 640" width="1280" height="640">
+<defs><pattern id="g" width="40" height="40" patternUnits="userSpaceOnUse"><path d="M40 0H0V40" fill="none" stroke="#1e293b" stroke-width="1"/></pattern>
+<radialGradient id="l" cx="50%" cy="0%" r="70%"><stop offset="0" stop-color="#f59e0b" stop-opacity=".22"/><stop offset="1" stop-color="#f59e0b" stop-opacity="0"/></radialGradient></defs>
+<rect width="1280" height="640" fill="#020617"/><rect width="1280" height="640" fill="url(#g)"/><rect width="1280" height="640" fill="url(#l)"/>
+<g transform="translate(140 150)"><g transform="translate(0 0)"><rect x="2" y="2" width="146" height="146" rx="33.0" fill="#0f172a" stroke="#f59e0b" stroke-opacity=".45" stroke-width="3.0"/>
+<g transform="translate(30.5 30.5) scale(3.875)" fill="none" stroke-linecap="round" stroke-linejoin="round">
+<path d="M5 21V4h14v17" stroke="#fbbf24" stroke-opacity=".45" stroke-width="2"/>
+<path d="M12 4l-2.5 5 4 3-3 4 1.5 5" stroke="#fbbf24" stroke-width="2"/></g></g></g>
+<text x="326" y="262" font-family="Inter,Segoe UI,Helvetica,Arial,sans-serif" font-size="108" font-weight="800" letter-spacing="-3" fill="#f8fafc">Sismo<tspan fill="#fbbf24">Scan</tspan></text>
+<text x="140" y="392" font-family="Inter,Segoe UI,Helvetica,Arial,sans-serif" font-size="40" font-weight="500" fill="#cbd5e1">Evaluación preliminar de grietas con foto,</text>
+<text x="140" y="446" font-family="Inter,Segoe UI,Helvetica,Arial,sans-serif" font-size="40" font-weight="500" fill="#cbd5e1">semáforo de riesgo y asistente.</text>
+<rect x="140" y="504" width="440" height="52" rx="14" fill="#f59e0b" fill-opacity=".12" stroke="#f59e0b" stroke-opacity=".45"/>
+<text x="164" y="539" font-family="ui-monospace,Menlo,Consolas,monospace" font-size="22" font-weight="700" fill="#fbbf24" letter-spacing="1">PWA · FLASK · ODS 9 · NSR-10</text>
+</svg>

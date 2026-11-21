@@ -1,0 +1,206 @@
+{% extends 'base.html' %}
+{% from '_macros.html' import icon, SEM, medidor, escala, evolucion %}
+{% set r = a.resultado %}{% set s = SEM[r.semaforo] %}{% set m = r.medidas %}
+{% block titulo %}Resultado preliminar{% endblock %}
+{% block scripts %}<script src="{{ url_for('static', filename='js/chat.js') }}" defer></script>{% endblock %}
+{% block contenido %}
+<div class="rs" data-sem="{{ r.semaforo }}">
+<div class="rs-bar no-print">
+  <a href="{{ url_for('main.historial') }}" class="rs-back">{{ icon('arrow-left', 'h-4 w-4') }} Historial</a>
+  <div class="rs-acciones">
+    <a href="{{ url_for('main.informe_pdf', aid=a.id) }}" class="rs-btn rs-btn-pdf">{{ icon('file', 'h-4 w-4') }} Informe PDF</a>
+    <button type="button" data-open-dialog="dlg-emergencia" class="rs-btn rs-btn-sos">{{ icon('phone', 'h-4 w-4') }} Emergencias 123</button>
+    <a href="#compartir" class="rs-btn">{{ icon('share', 'h-4 w-4') }} Compartir análisis</a>
+    <button type="button" data-print class="rs-btn rs-btn-ic" aria-label="Imprimir">{{ icon('printer', 'h-4 w-4') }}</button>
+    <form method="post" action="{{ url_for('main.eliminar', aid=a.id) }}" data-confirm="¿Eliminar este análisis? No se puede deshacer."><input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+      <button class="rs-btn rs-btn-del">{{ icon('trash', 'h-4 w-4') }} Eliminar</button></form>
+  </div>
+</div>
+
+{% set texto_wa = 'SismoScan: resultado ' ~ s.label ~ ' (' ~ r.decision|lower ~ ') en ' ~ R.ELEMENTOS[a.entrada.elemento]|lower ~ '. Resumen del análisis: ' ~ (enlace or '') %}
+{% if r.semaforo == 'rojo' %}
+<section class="no-print mt-5 overflow-hidden rounded-2xl border border-red-400 bg-gradient-to-br from-red-600 to-red-700 p-5 text-white shadow-float animate-rise" role="alert">
+  <div class="flex flex-wrap items-center gap-4">
+    <span class="grid h-12 w-12 shrink-0 place-items-center rounded-xl bg-white/15 animate-pulse-ring">{{ icon('alert', 'h-7 w-7') }}</span>
+    <div class="min-w-0 flex-1"><p class="text-lg font-extrabold leading-snug">Peligro de colapso: evacúa y no regreses</p>
+      <p class="mt-0.5 text-sm text-red-50">Aléjate del edificio, ayuda a otros a salir y llama a emergencias.</p></div>
+    <div class="flex w-full flex-wrap gap-2 sm:w-auto">
+      <button type="button" data-open-dialog="dlg-emergencia" class="inline-flex min-h-12 flex-1 items-center justify-center gap-2 rounded-xl bg-white px-5 text-base font-extrabold text-red-700 shadow-soft transition hover:bg-red-50 sm:flex-none">{{ icon('phone', 'h-5 w-5') }} Alerta inmediata</button>
+      <a href="tel:{{ emergencias[0][1] }}" data-llamar="{{ emergencias[0][1] }}" data-llamar-nombre="{{ emergencias[0][0] }}" class="inline-flex min-h-12 flex-1 items-center justify-center gap-2 rounded-xl border border-white/40 px-5 text-base font-bold transition hover:bg-white/10 sm:flex-none">{{ icon('phone', 'h-5 w-5') }} Llamar al {{ emergencias[0][1] }}</a>
+      {% if emergencias|length > 1 %}<a href="tel:{{ emergencias[1][1] }}" data-llamar="{{ emergencias[1][1] }}" data-llamar-nombre="{{ emergencias[1][0] }}" class="inline-flex min-h-12 flex-1 items-center justify-center gap-2 rounded-xl border border-white/40 px-5 text-sm font-bold transition hover:bg-white/10 sm:flex-none">{{ emergencias[1][0] }} · {{ emergencias[1][1] }}</a>{% endif %}
+      {% if enlace %}<a target="_blank" rel="noopener" href="https://wa.me/?text={{ texto_wa|urlencode }}" class="inline-flex min-h-12 flex-1 items-center justify-center gap-2 rounded-xl bg-[#128c7e] px-5 text-base font-bold text-white shadow-soft transition hover:bg-[#0f766e] sm:flex-none">{{ icon('send', 'h-5 w-5') }} Informe por WhatsApp</a>
+      {% else %}<form method="post" action="{{ url_for('main.compartir', aid=a.id) }}" class="flex flex-1 sm:flex-none"><input type="hidden" name="csrf_token" value="{{ csrf_token() }}"><input type="hidden" name="destino" value="whatsapp"><button class="inline-flex min-h-12 w-full items-center justify-center gap-2 rounded-xl bg-[#128c7e] px-5 text-base font-bold text-white shadow-soft transition hover:bg-[#0f766e]">{{ icon('send', 'h-5 w-5') }} Informe por WhatsApp</button></form>{% endif %}</div>
+  </div>
+</section>
+{% endif %}
+
+<header class="mt-5 animate-rise">
+  <p class="text-sm font-medium text-brand-700 dark:text-brand-300">Resultado preliminar · {{ a.creado|fecha }}</p>
+  <h1 class="mt-1 text-3xl font-extrabold tracking-tight text-ink-900 dark:text-white sm:text-4xl">{{ R.ELEMENTOS[a.entrada.elemento] }} · {{ m.largo_mm|cm }} cm</h1>
+  {% if a.entrada.ubicacion %}<p class="mt-1 text-sm text-ink-500 dark:text-ink-400">{{ a.entrada.ubicacion }}</p>{% endif %}
+</header>
+
+<section class="card rs-dictamen {{ s.border }} mt-6 overflow-hidden animate-rise">
+  <div class="grid gap-0 md:grid-cols-[auto_1fr]">
+    <div class="{{ s.soft }} flex flex-col items-center justify-center gap-4 p-6 md:p-8">
+      {{ medidor(r.indice, r.semaforo, 'w-60') }}
+      <div class="w-56"><p class="mb-1 text-center text-xs font-semibold uppercase tracking-wide text-ink-500 dark:text-ink-400">Índice de severidad</p>{{ escala(r.indice) }}</div>
+    </div>
+    <div class="p-6 md:p-8">
+      <div class="flex items-center gap-3">
+        <span class="flex gap-1.5" role="img" aria-label="Semáforo: {{ s.label }}">
+          <span class="h-4 w-4 rounded-full {% if r.semaforo == 'rojo' %}bg-red-500 ring-4 ring-red-500/25 animate-pulse-ring{% else %}bg-ink-200 dark:bg-ink-800{% endif %}"></span>
+          <span class="h-4 w-4 rounded-full {% if r.semaforo == 'amarillo' %}bg-amber-500 ring-4 ring-amber-500/25{% else %}bg-ink-200 dark:bg-ink-800{% endif %}"></span>
+          <span class="h-4 w-4 rounded-full {% if r.semaforo == 'verde' %}bg-emerald-500 ring-4 ring-emerald-500/25{% else %}bg-ink-200 dark:bg-ink-800{% endif %}"></span></span>
+        <span class="{{ s.badge }}">{{ s.label }} · {{ s.sub }}</span>
+      </div>
+      <p class="rs-score mono"><b>{{ r.indice }}</b><span>de 100 · severidad</span></p>
+      <p class="mt-4 text-sm font-semibold uppercase tracking-wide {{ s.text }}">{{ r.decision }}</p>
+      <h2 class="mt-1 text-2xl font-extrabold leading-snug tracking-tight text-ink-900 dark:text-white sm:text-3xl">{{ r.titulo }}</h2>
+      {% if r.criticas %}
+      <div class="mt-5 rounded-xl border border-red-200 bg-red-50 p-4 dark:border-red-900 dark:bg-red-950/50">
+        <p class="flex items-center gap-2 text-sm font-bold text-red-800 dark:text-red-200">{{ icon('alert', 'h-4 w-4') }} {{ r.triaje.titulo if r.triaje else 'Señales críticas' }}</p>
+        {% if r.triaje %}<p class="mt-1 text-xs text-red-900/80 dark:text-red-100/75">Puntaje acumulado {{ r.triaje.base }}/100 → índice final {{ r.triaje.final }}/100 por disparador crítico. <a href="#por-que" class="underline">Ver justificación</a></p>{% endif %}
+        <ul class="mt-2 list-disc space-y-1 pl-5 text-sm text-red-900 dark:text-red-100">{% for c in r.criticas %}<li>{{ c }}</li>{% endfor %}</ul></div>{% endif %}
+      <p class="mt-5 text-xs text-ink-500 dark:text-ink-400">Semáforo según la señalización de la metodología unificada de la UNGRD (Circular 73 de 2026). Orientación preliminar, no un dictamen.</p>
+    </div>
+  </div>
+</section>
+
+<div class="rs-g12">
+  <section class="card p-5 sm:p-6 animate-rise">
+    <div class="flex items-center justify-between"><h2 class="text-lg font-bold text-ink-900 dark:text-white">Imagen</h2>
+      {% if a.tiene_miniatura and a.tiene_deteccion %}<div class="no-print flex gap-1 rounded-lg bg-ink-100 p-1 text-xs font-semibold dark:bg-ink-800" role="tablist">
+        <button type="button" role="tab" data-tab="foto" aria-selected="true" class="rounded-md px-3 py-1.5 aria-selected:bg-white aria-selected:shadow-sm dark:aria-selected:bg-ink-900">Foto</button>
+        <button type="button" role="tab" data-tab="deteccion" aria-selected="false" class="rounded-md px-3 py-1.5 aria-selected:bg-white aria-selected:shadow-sm dark:aria-selected:bg-ink-900">Detección</button></div>{% endif %}</div>
+    {% if a.tiene_miniatura %}
+    <div class="rs-img" data-zoom title="Toca para ampliar">
+      <span class="rs-img-tag mono">EVIDENCIA · TOCA PARA AMPLIAR</span>
+      <img data-pane="foto" src="{{ url_for('main.imagen', aid=a.id, tipo='miniatura') }}" alt="Fotografía analizada" class="w-full">
+      {% if a.tiene_deteccion %}<img data-pane="deteccion" hidden src="{{ url_for('main.imagen', aid=a.id, tipo='deteccion') }}" alt="Grieta detectada resaltada en rojo" class="w-full"><p data-pane="deteccion" hidden class="bg-white p-3 text-xs text-ink-500 dark:bg-ink-900 dark:text-ink-400">En rojo: lo que detectó la visión por computador.</p>{% endif %}</div>
+    {% else %}<p class="mt-4 rounded-xl border border-dashed border-ink-300 p-6 text-center text-sm text-ink-500 dark:border-ink-700 dark:text-ink-400">La imagen no se almacenó (modo de privacidad).</p>{% endif %}
+    <h3 class="mt-6 text-sm font-bold text-ink-900 dark:text-white">Fuentes del análisis</h3>
+    <ul class="mt-2 flex flex-wrap gap-2">{% for p in r.proveedores %}
+      <li class="badge {% if p.estado == 'ok' %}bg-emerald-50 text-emerald-700 ring-1 ring-inset ring-emerald-600/20 dark:bg-emerald-950 dark:text-emerald-300{% elif p.estado == 'error' %}bg-amber-50 text-amber-800 ring-1 ring-inset ring-amber-600/25 dark:bg-amber-950 dark:text-amber-300{% else %}bg-ink-100 text-ink-600 dark:bg-ink-800 dark:text-ink-300{% endif %}" title="{{ p.detalle }}">{{ p.etiqueta }}</li>{% endfor %}</ul>
+  </section>
+
+  <section class="card p-5 sm:p-6 animate-rise">
+    <h2 class="text-lg font-bold text-ink-900 dark:text-white">Medidas</h2>
+    {% set cf = r.confianza.valor %}
+    <dl class="an-meters rs-meters">
+      <div class="an-meter"><dt>Longitud</dt><dd>{{ m.largo_mm|cm }} <small>cm</small></dd></div>
+      <div class="an-meter"><dt>Ángulo (eje X)</dt><dd>{{ m.angulo_deg|coma }}<small>°</small></dd></div>
+      <div class="an-meter"><dt>Orientación</dt><dd class="txt">{{ {'horizontal': 'Horizontal', 'vertical': 'Vertical', 'diagonal': 'Diagonal'}[m.orientacion] }}</dd></div>
+      <div class="an-meter"><dt>Confianza</dt><dd>{{ cf }}<small>%</small></dd></div>
+      <div class="an-meter"><dt>Extensión en X</dt><dd>{{ m.ext_x_mm|cm }} <small>cm</small></dd></div>
+      <div class="an-meter"><dt>Extensión en Y</dt><dd>{{ m.ext_y_mm|cm }} <small>cm</small></dd></div>
+    </dl>
+    <div class="mt-4 flex items-center gap-4 rounded-xl border border-ink-200 p-4 dark:border-ink-800">
+      <svg viewBox="0 0 100 100" class="h-24 w-24 shrink-0" role="img" aria-label="Orientación de la grieta: {{ m.angulo_deg }} grados respecto al eje X">
+        <path d="M8 50h84M50 92V8" class="stroke-ink-300 dark:stroke-ink-700" stroke-width="1.5"/><path d="M88 46l5 4-5 4M46 12l4-5 4 5" class="stroke-ink-400" stroke-width="1.5" fill="none"/>
+        <text x="88" y="68" class="fill-ink-500 text-[9px] font-semibold">X</text><text x="57" y="14" class="fill-ink-500 text-[9px] font-semibold">Y</text>
+        <path d="M{{ (50 - 38 * (m.angulo_deg|cos))|round(1) }} {{ (50 + 38 * (m.angulo_deg|sin))|round(1) }} L{{ (50 + 38 * (m.angulo_deg|cos))|round(1) }} {{ (50 - 38 * (m.angulo_deg|sin))|round(1) }}" class="{{ s.stroke }}" stroke-width="4" stroke-linecap="round"/>
+      </svg>
+      <div><p class="text-sm font-semibold text-ink-900 dark:text-white">Orientación {{ {'horizontal': 'horizontal (eje X)', 'vertical': 'vertical (eje Y)', 'diagonal': 'diagonal'}[m.orientacion] }}</p>
+        <p class="mt-1 text-xs text-ink-500 dark:text-ink-400">Método: {{ 'trazo calibrado sobre la foto' if a.entrada.medicion.calibrada else 'valores ingresados a mano' }}. {% if r.deteccion_local.detectada %}La detección automática midió {{ r.deteccion_local.angulo_deg|coma }}° de ángulo.{% endif %}</p></div>
+    </div>
+    <h3 class="mt-6 text-sm font-bold text-ink-900 dark:text-white">Confianza del análisis</h3>
+    {% set c = r.confianza.valor %}
+    <div class="mt-2 flex items-center gap-3"><div class="bar flex-1"><span data-w="{{ c }}" class="{{ 'bg-emerald-500' if c >= 70 else 'bg-amber-500' if c >= 45 else 'bg-red-500' }}"></span></div>
+      <span class="text-sm font-bold tabular">{{ c }}% · {{ 'Alta' if c >= 70 else 'Media' if c >= 45 else 'Baja' }}</span></div>
+    <ul class="mt-2 list-disc space-y-0.5 pl-5 text-xs text-ink-500 dark:text-ink-400">{% for t in r.confianza.razones %}<li>{{ t }}</li>{% endfor %}</ul>
+  </section>
+</div>
+
+<section id="por-que" class="card mt-6 p-5 sm:p-6 animate-rise">
+  <h2 class="text-lg font-bold text-ink-900 dark:text-white">Por qué este resultado</h2>
+  <p class="mt-1 text-sm text-ink-500 dark:text-ink-400">Cada factor suma puntos hasta un máximo de 100. El índice final ({{ r.indice }}/100) define el color: verde 0–29, amarillo 30–59, rojo 60–100.</p>
+  {% if r.triaje %}<div class="mt-4 rounded-xl border border-red-200 bg-red-50 p-4 dark:border-red-900/60 dark:bg-red-950/30"><p class="flex items-center gap-2 text-sm font-bold text-red-700 dark:text-red-300">{{ icon('alert', 'h-4 w-4') }} {{ r.triaje.titulo }}</p>
+    <p class="mt-1 text-sm text-red-900/90 dark:text-red-100/85">{{ r.triaje.texto }}</p>
+    <p class="mt-2 flex flex-wrap items-center gap-2 text-xs font-semibold tabular"><span class="chip">Acumulado {{ r.triaje.base }}/100</span><span class="chip">Ajuste +{{ r.triaje.ajuste }}</span><span class="chip">Final {{ r.triaje.final }}/100</span></p>
+    <ul class="mt-3 space-y-1 text-xs text-red-900/80 dark:text-red-100/75">{% for d in r.disparadores %}<li><b>{{ d.titulo }}:</b> {{ d.detalle }} <span class="opacity-70">({{ d.referencia }})</span></li>{% endfor %}</ul></div>{% endif %}
+  <ul class="rs-factores">{% for f in r.factores if f.max %}{% set pct = (f.puntos * 100 / f.max)|round|int %}
+    <li><div class="flex items-baseline justify-between gap-3"><p class="text-sm font-semibold text-ink-900 dark:text-white">{{ f.etiqueta }}</p><p class="text-sm font-bold tabular text-ink-600 dark:text-ink-300">{{ f.puntos }}/{{ f.max }}</p></div>
+      <div class="bar mt-2"><span data-w="{{ pct }}" class="{{ 'bg-red-500' if pct >= 66 else 'bg-amber-500' if pct >= 33 else 'bg-emerald-500' }}"></span></div>
+      <p class="mt-2 text-sm text-ink-600 dark:text-ink-300">{{ f.detalle }}</p>
+      {% if f.referencia %}<p class="mt-0.5 text-xs text-ink-400">Referencia: {{ f.referencia }}</p>{% endif %}</li>{% endfor %}</ul>
+</section>
+
+<div class="mt-6 grid gap-6 lg:grid-cols-2">
+  <section class="card p-5 sm:p-6 animate-rise"><h2 class="text-lg font-bold text-ink-900 dark:text-white">Qué hacer ahora</h2>
+    <ol class="mt-4 space-y-3">{% for t in r.acciones %}<li class="flex gap-3 text-sm text-ink-700 dark:text-ink-200"><span class="grid h-6 w-6 shrink-0 place-items-center rounded-full {{ s.soft }} text-xs font-bold {{ s.text }}">{{ loop.index }}</span><span>{{ t }}</span></li>{% endfor %}</ol></section>
+  <section class="card border-amber-200 bg-amber-50 p-5 sm:p-6 dark:border-amber-900 dark:bg-amber-950/40 animate-rise"><h2 class="flex items-center gap-2 text-lg font-bold text-amber-900 dark:text-amber-200">{{ icon('info', 'h-5 w-5') }} Importante</h2>
+    <ul class="mt-3 space-y-2 text-sm text-amber-900/90 dark:text-amber-100/85">{% for t in r.advertencias %}<li>{{ t }}</li>{% endfor %}</ul></section>
+</div>
+
+{# ---------- Chat conversacional ---------- #}
+<section id="chat" class="card rs-chat no-print mt-6 overflow-hidden animate-rise" data-url="{{ url_for('api.chat_enviar', aid=a.id) }}">
+  <div class="flex items-center gap-3 border-b border-ink-100 p-5 dark:border-ink-800">
+    <span class="grid h-10 w-10 shrink-0 place-items-center rounded-xl bg-brand-600 text-white">{{ icon('chat', 'h-5 w-5') }}</span>
+    <div class="min-w-0"><h2 class="text-lg font-bold leading-tight text-ink-900 dark:text-white">Asistente SismoScan</h2>
+      <p class="text-xs text-ink-500 dark:text-ink-400">Responde con base en este análisis y la NSR-10. No reemplaza a un ingeniero estructural.</p></div>
+  </div>
+  <div id="chat-log" class="max-h-[26rem] min-h-40 space-y-3 overflow-y-auto overscroll-contain p-5" aria-live="polite" aria-label="Conversación">
+    <div class="rs-b rs-b-bot">Hola, soy el asistente de SismoScan. Tu resultado es {{ s.label }} ({{ r.decision|lower }}). Pregúntame qué hacer ahora, si puedes sacar tus cosas o cómo saber si la grieta crece.</div>
+    {% for m in mensajes %}{% if m.rol == 'user' %}<div class="rs-b rs-b-user">{{ m.texto }}</div>
+    {% else %}<div class="rs-b rs-b-bot">{{ m.texto }}</div>{% endif %}{% endfor %}
+  </div>
+  <div class="flex flex-wrap gap-2 px-5 pb-3">{% for t in sugerencias %}<button type="button" data-sug class="rs-pill">{{ t }}</button>{% endfor %}</div>
+  <form id="chat-form" class="flex gap-2 border-t border-ink-100 p-3 dark:border-ink-800" autocomplete="off">
+    <label class="sr-only" for="chat-in">Tu pregunta</label>
+    <input id="chat-in" class="field rs-in" maxlength="600" placeholder="Escribe tu pregunta…" enterkeyhint="send">
+    <button class="rs-send" aria-label="Enviar pregunta">{{ icon('send', 'h-4 w-4') }}<span>Enviar</span></button>
+  </form>
+  <p class="px-5 pb-4 text-xs text-ink-400">{{ pie_chat }}</p>
+</section>
+
+{# ---------- Compartir ---------- #}
+<section id="compartir" class="card no-print mt-6 p-5 sm:p-6 animate-rise">
+  <h2 class="flex items-center gap-2 text-lg font-bold text-ink-900 dark:text-white">{{ icon('share', 'h-5 w-5') }} Compartir este análisis</h2>
+  <p class="mt-1 text-sm text-ink-500 dark:text-ink-400">Genera un enlace con el resumen para un familiar, vecino o ingeniero. No incluye la foto, tu nombre ni la ubicación del inmueble, y puedes desactivarlo cuando quieras.</p>
+  {% if enlace %}
+  <div class="mt-4 flex gap-2"><input id="enlace" readonly value="{{ enlace }}" class="field" aria-label="Enlace público"><button type="button" data-copy="enlace" class="btn-ghost shrink-0">Copiar</button></div>
+  <div class="mt-3 flex flex-wrap gap-2">
+    <a target="_blank" rel="noopener" href="https://wa.me/?text={{ texto_wa|urlencode }}" class="btn-primary !bg-[#128c7e] hover:!bg-[#0f766e]">{{ icon('send', 'h-4 w-4') }} WhatsApp</a>
+    <button type="button" data-share data-url="{{ enlace }}" data-text="{{ texto_wa }}" class="btn-ghost">{{ icon('share', 'h-4 w-4') }} Otras apps</button>
+    <form method="post" action="{{ url_for('main.dejar_de_compartir', aid=a.id) }}" data-confirm="¿Desactivar el enlace? Quien lo tenga dejará de poder verlo."><input type="hidden" name="csrf_token" value="{{ csrf_token() }}"><button class="btn-ghost">Dejar de compartir</button></form>
+  </div>
+  {% else %}
+  <form method="post" action="{{ url_for('main.compartir', aid=a.id) }}" class="mt-4"><input type="hidden" name="csrf_token" value="{{ csrf_token() }}"><button class="btn-primary">{{ icon('link', 'h-4 w-4') }} Crear enlace para compartir</button></form>
+  {% endif %}
+</section>
+
+{# ---------- Directorio de emergencia ---------- #}
+<dialog id="dlg-emergencia" aria-labelledby="dlg-t" class="m-auto w-[min(94vw,32rem)] rounded-2xl border border-ink-200 bg-white p-0 text-ink-900 shadow-float backdrop:bg-ink-950/70 backdrop:backdrop-blur-sm dark:border-ink-700 dark:bg-ink-900 dark:text-ink-50">
+  <div class="p-6">
+    <div class="flex items-start justify-between gap-4"><div><h2 id="dlg-t" class="text-xl font-extrabold">Directorio de emergencia</h2>
+      <p class="mt-1 text-sm text-ink-500 dark:text-ink-400">Toca un número para llamar. Si hay heridos o atrapados, llama primero al {{ emergencias[0][1] }}.</p></div>
+      <button type="button" data-close-dialog class="grid h-9 w-9 shrink-0 place-items-center rounded-lg text-ink-500 hover:bg-ink-100 dark:hover:bg-ink-800" aria-label="Cerrar">{{ icon('x', 'h-5 w-5') }}</button></div>
+    <ul class="mt-5 space-y-2">{% for n, t, nota in emergencias %}
+      <li><a href="tel:{{ t }}" data-llamar="{{ t }}" data-llamar-nombre="{{ n }}" class="flex items-center gap-3 rounded-xl border border-ink-200 p-3 transition hover:border-red-400 hover:bg-red-50 dark:border-ink-700 dark:hover:bg-red-950/40">
+        <span class="grid h-10 w-10 shrink-0 place-items-center rounded-lg bg-red-50 text-red-600 dark:bg-red-950 dark:text-red-300">{{ icon('phone', 'h-5 w-5') }}</span>
+        <span class="min-w-0 flex-1"><b class="block text-sm">{{ n }}</b><span class="block text-xs text-ink-500 dark:text-ink-400">{{ nota }}</span></span>
+        <span class="text-xl font-extrabold tabular text-red-600 dark:text-red-300">{{ t }}</span></a></li>{% endfor %}</ul>
+    <div class="mt-5 rounded-xl bg-amber-50 p-4 text-sm text-amber-900 dark:bg-amber-950/50 dark:text-amber-100"><b>Mientras llega la ayuda:</b> sal con calma, no uses ascensores, aléjate de fachadas y balcones, y no regreses por tus pertenencias.</div>
+    <div class="mt-5 flex flex-wrap gap-2">
+      {% if enlace %}<a target="_blank" rel="noopener" href="https://wa.me/?text={{ texto_wa|urlencode }}" class="btn-primary !bg-[#128c7e]">{{ icon('send', 'h-4 w-4') }} Avisar por WhatsApp</a>
+      {% else %}<form method="post" action="{{ url_for('main.compartir', aid=a.id) }}"><input type="hidden" name="csrf_token" value="{{ csrf_token() }}"><button class="btn-primary">{{ icon('share', 'h-4 w-4') }} Crear enlace para avisar</button></form>{% endif %}
+      <button type="button" data-close-dialog class="btn-ghost">Cerrar</button></div>
+  </div>
+</dialog>
+
+{% if graficas %}
+<section id="evolucion" class="card no-print mt-6 p-5 sm:p-6 animate-rise" aria-labelledby="h-evo">
+  <h2 id="h-evo" class="text-lg font-bold text-ink-900 dark:text-white">Evolución de esta grieta</h2>
+  {% set prim, ult = serie[0], serie[-1] %}
+  {% set dl = (ult.resultado.medidas.largo_mm - prim.resultado.medidas.largo_mm) / 10 %}
+  <p class="mt-1 text-sm text-ink-600 dark:text-ink-300">{{ serie|length }} mediciones, de {{ prim.creado|fecha }} a {{ ult.creado|fecha }}. Cambio de longitud: <b>{{ '%+.1f'|format(dl) }} cm</b>; índice: <b>{{ '%+d'|format(ult.resultado.indice - prim.resultado.indice) }}</b>.
+    {% if dl > 0 and (ult.resultado.indice - prim.resultado.indice >= 5 or dl * 10 >= 0.1 * prim.resultado.medidas.largo_mm) %}<b class="text-red-600 dark:text-red-400">Parece estar creciendo: pide una revisión profesional.</b>{% endif %}</p>
+  <div class="mt-4">{{ evolucion(graficas) }}</div>
+  <p class="mt-3 text-xs text-ink-500 dark:text-ink-400">Para comparar bien, usa la misma referencia y fotografía desde el mismo punto.
+    <a class="font-semibold underline" href="{{ url_for('main.comparar', a=prim.id, b=ult.id) }}">Comparar la primera con la última</a>.</p>
+</section>{% endif %}
+
+<div class="no-print mt-8 flex flex-wrap gap-3"><a href="{{ url_for('main.analizar', remedir=a.id) }}" class="btn-primary">{{ icon('refresh', 'h-4 w-4') }} Medir de nuevo esta grieta</a><a href="{{ url_for('main.analizar', otra=a.id) }}" class="btn-ghost">{{ icon('plus', 'h-4 w-4') }} Agregar otra grieta a este caso</a>{% if caso|length > 1 %}<a href="{{ url_for('main.caso', clave=a.caso_id or a.id) }}" class="btn-ghost">Ver el caso ({{ caso|length }} análisis)</a>{% endif %}<a href="{{ url_for('main.analizar') }}" class="btn-ghost">{{ icon('plus', 'h-4 w-4') }} Nuevo análisis</a><a href="{{ url_for('main.metodologia') }}" class="btn-ghost">Cómo se calcula</a></div>
+</div>
+{% endblock %}

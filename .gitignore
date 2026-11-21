@@ -1,0 +1,24 @@
+# Secretos y datos locales: NUNCA subir a GitHub
+.env
+.env.*
+!.env.example
+instance/
+*.db
+*.sqlite3
+secret.key
+respaldos/
+
+# Python
+__pycache__/
+*.pyc
+.venv/
+venv/
+
+# Node / compilados
+node_modules/
+
+# Sistema / editor
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/

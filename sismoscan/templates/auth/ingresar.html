@@ -1,0 +1,32 @@
+{% extends 'auth/layout.html' %}
+{% from '_macros.html' import icon %}
+{% block titulo %}Iniciar sesión{% endblock %}
+{% block formulario %}
+<h2 class="mb-2 text-2xl font-bold tracking-tight text-white lg:text-3xl">Bienvenido de nuevo</h2>
+<p class="mb-8 text-sm text-slate-400">Ingresa con tus credenciales para continuar con las evaluaciones</p>
+<form method="post" class="space-y-5" novalidate>
+  <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+  <div>
+    <label for="correo" class="mb-1.5 block text-xs font-medium text-slate-300">Correo electrónico</label>
+    <input id="correo" name="correo" type="email" autocomplete="email" inputmode="email" required value="{{ correo }}" placeholder="tu@correo.com" autofocus
+      class="block w-full rounded-xl border border-slate-800 bg-slate-950/60 px-4 py-3.5 text-sm text-white placeholder-slate-500 transition-all hover:border-slate-700 focus:border-amber-500 focus:outline-none focus:ring-2 focus:ring-amber-500/20">
+  </div>
+  <div>
+    <label for="clave" class="mb-1.5 block text-xs font-medium text-slate-300">Contraseña</label>
+    <div class="relative">
+      <input id="clave" name="clave" type="password" autocomplete="current-password" required placeholder="Tu contraseña"
+        class="block w-full rounded-xl border border-slate-800 bg-slate-950/60 px-4 py-3.5 pr-12 text-sm text-white placeholder-slate-500 transition-all hover:border-slate-700 focus:border-amber-500 focus:outline-none focus:ring-2 focus:ring-amber-500/20">
+      <button type="button" data-toggle-pass="clave" class="absolute right-1.5 top-1/2 grid h-9 w-9 -translate-y-1/2 place-items-center rounded-lg text-slate-500 transition hover:text-amber-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber-500/40" aria-label="Mostrar u ocultar la contraseña">{{ icon('eye', 'h-[18px] w-[18px]') }}</button>
+    </div>
+  </div>
+  <div class="flex flex-wrap items-center justify-between gap-x-4 gap-y-2 text-sm">
+    <label class="group flex cursor-pointer items-center gap-2.5 text-slate-300">
+      <input type="checkbox" name="recordar" value="1" class="peer sr-only">
+      <span class="grid h-[18px] w-[18px] place-items-center rounded-md border border-slate-600 bg-slate-950/60 text-slate-950 transition group-hover:border-amber-500/60 peer-checked:border-amber-500 peer-checked:bg-amber-500 peer-focus-visible:ring-2 peer-focus-visible:ring-amber-500/40 [&>svg]:opacity-0 peer-checked:[&>svg]:opacity-100">{{ icon('check', 'h-3 w-3') }}</span>
+      Recordarme</label>
+    <a class="font-medium text-amber-400 transition hover:text-amber-300 hover:underline" href="{{ url_for('auth.olvide') }}">¿Olvidaste tu contraseña?</a>
+  </div>
+  <button class="w-full transform rounded-xl bg-amber-500 px-4 py-3.5 font-bold text-slate-950 shadow-lg shadow-amber-500/20 transition-all hover:bg-amber-400 active:scale-[0.98] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber-300 focus-visible:ring-offset-2 focus-visible:ring-offset-slate-900">Iniciar sesión</button>
+</form>
+<p class="mt-8 border-t border-slate-800 pt-6 text-center text-sm text-slate-400">¿Aún no tienes cuenta? <a class="font-semibold text-amber-400 transition hover:text-amber-300 hover:underline" href="{{ url_for('auth.registro') }}">Regístrate aquí</a></p>
+{% endblock %}
